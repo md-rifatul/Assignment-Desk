@@ -16,7 +16,7 @@ namespace Assignment_Desk.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create( [FromBody] RegisterDto dto)
         {
             await _adminService.Create(dto);
@@ -24,20 +24,20 @@ namespace Assignment_Desk.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetUsers()
         {
             return Ok(await _adminService.GetUsers());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("get/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             return Ok(await _adminService.GetById(id));
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> Update(int id, RegisterDto dto)
         {
             await _adminService.Update(id, dto);
@@ -45,7 +45,7 @@ namespace Assignment_Desk.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _adminService.Delete(id);

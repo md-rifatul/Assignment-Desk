@@ -16,7 +16,7 @@ namespace Assignment_Desk.Controllers
             _classService = classService;
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateClass([FromBody] CreateClassDto dto)
         {
             if (!ModelState.IsValid)
@@ -27,7 +27,7 @@ namespace Assignment_Desk.Controllers
             return Ok();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateClass(int id, [FromBody] CreateClassDto dto)
         {
             if (!ModelState.IsValid)
@@ -35,21 +35,21 @@ namespace Assignment_Desk.Controllers
             await _classService.UpdateClass(id, dto);
             return Ok();
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteClass(int id)
         {
             await _classService.DeleteClass(id);
             return Ok();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("get/{id}")]
         public async Task<IActionResult> GetClassById(int id)
         {
             var cls = await _classService.GetClassById(id);
             return Ok(cls);
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetClasses()
         {
             var classes = await _classService.GetAllClasses();
