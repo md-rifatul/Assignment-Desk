@@ -54,7 +54,7 @@ namespace AssignmentDesk.Application.Services
         public async Task UpdateSubject(int id, CreateSubjectDto dto)
         {
             var subject = await _subjectRepository.GetByIdAsync(id);
-            _mapper.Map(subject, dto);
+            _mapper.Map(dto, subject);
             await _unitOfWork.CommitAsync();
         }
     }

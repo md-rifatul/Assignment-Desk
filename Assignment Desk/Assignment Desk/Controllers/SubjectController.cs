@@ -24,10 +24,29 @@ namespace Assignment_Desk.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllSubjects()
         {
             var subjects = await _subjectService.GetSubjects();
             return Ok(subjects);
+        }
+
+        [HttpGet("get/{id}")]
+        public async Task<IActionResult> GetSubjectById(int id)
+        {
+            var subject = await _subjectService.GetSubjectById(id);
+            return Ok(subject);
+        }
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteSubjectById(int id)
+        {
+            await _subjectService.DeleteSubject(id);
+            return Ok();
+        }
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateSubject(int id, [FromBody] CreateSubjectDto dto)
+        {
+            await _subjectService.UpdateSubject(id, dto);
+            return Ok();
         }
     }
 }
