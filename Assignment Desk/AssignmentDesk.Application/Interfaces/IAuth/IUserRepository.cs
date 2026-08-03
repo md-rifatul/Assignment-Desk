@@ -12,5 +12,9 @@ namespace AssignmentDesk.Application.Interfaces.IAuth
         Task<User?> GetByEmailAsync(string email);
 
         Task AddAsync(User user);
+        Task UpdateAsync(User user);
+        Task DeleteAsync(User user);
+        Task<IEnumerable<User>> GetUsers();
+        Task<User?> GetByIdAsync(int id);
     }
 }
