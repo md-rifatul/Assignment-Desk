@@ -65,6 +65,7 @@ builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<UserProfile>();
     cfg.AddProfile<ClassProfile>();
+    cfg.AddProfile<SubjectProfile>();
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
