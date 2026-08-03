@@ -1,6 +1,7 @@
 using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Domain.Entities;
+using AssignmentDesk.Domain.Enums;
 using AssignmentDesk.Infrastructure.Repositories.Auth;
 using AssignmentDesk.Infrastructure.Repositories.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterDto dto)
+    public async Task<IActionResult> Register(AdminRegisterDto dto)
     {
         // Check email already exists
         var user = await _repository.GetByEmailAsync(dto.Email);
@@ -40,7 +41,7 @@ public class AuthController : ControllerBase
             FullName = dto.FullName,
             Email = dto.Email,
             PasswordHash = hashPassword,
-            Role = dto.Role,
+            Role = UserRole.Admin,
             IsActive = true,
             CreatedAt = DateTime.UtcNow
         };

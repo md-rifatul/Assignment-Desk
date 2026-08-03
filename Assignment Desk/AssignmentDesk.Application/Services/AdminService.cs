@@ -72,7 +72,7 @@ namespace AssignmentDesk.Application.Services
         public async Task Update(int id, RegisterDto dto)
         {
             var user = await _userRepository.GetByIdAsync(id);
-            _mapper.Map(user, dto);
+            _mapper.Map(dto, user);
             await _unitOfWork.CommitAsync();
         }
     }
