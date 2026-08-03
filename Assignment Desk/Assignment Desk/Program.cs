@@ -6,6 +6,7 @@ using AssignmentDesk.Application.Interfaces.IUnitOfWork;
 using AssignmentDesk.Application.Mapping;
 using AssignmentDesk.Application.Services;
 using AssignmentDesk.Infrastructure.Data;
+using AssignmentDesk.Infrastructure.Repositories;
 using AssignmentDesk.Infrastructure.Repositories.Auth;
 using AssignmentDesk.Infrastructure.Repositories.Common;
 using AssignmentDesk.Infrastructure.Services;
@@ -52,8 +53,10 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped(typeof(IReadRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IClassRepository,ClassRepository>();
 
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IClassService, ClassService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<UnitOfWork>();
