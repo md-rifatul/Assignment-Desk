@@ -55,10 +55,12 @@ builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IClassRepository,ClassRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+builder.Services.AddScoped<ITeacherSubjectRepository, TeacherSubjectRepository>();
 
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<ISubjectService,SubjectService>();
+builder.Services.AddScoped<ITeacherSubjectService, TeacherSubjectService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<UnitOfWork>();
@@ -68,6 +70,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<UserProfile>();
     cfg.AddProfile<ClassProfile>();
     cfg.AddProfile<SubjectProfile>();
+    cfg.AddProfile<TeacherSubjectProfile>();
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
