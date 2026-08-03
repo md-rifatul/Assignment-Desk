@@ -17,9 +17,8 @@ namespace AssignmentDesk.Infrastructure.Repositories.Common
 
         // 🔍 Get by Id
         public async Task<T?> GetByIdAsync(
-                    int? id = null,
-                    Expression<Func<T, bool>>? filter = null,
-                    Func<IQueryable<T>, IQueryable<T>>? include = null)
+            int id,
+            Func<IQueryable<T>, IQueryable<T>>? include = null)
         {
             IQueryable<T> query = _dbSet;
 
@@ -28,15 +27,8 @@ namespace AssignmentDesk.Infrastructure.Repositories.Common
                 query = include(query);
             }
 
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-            if (id.HasValue)
-            {
-                return await query.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
-            }
-            return await query.FirstOrDefaultAsync();
+            // EF.Property দিয়ে সহজে আইডি ধরে ফিল্টার করা
+            return await query.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
         }
 
         // 📋 Get All

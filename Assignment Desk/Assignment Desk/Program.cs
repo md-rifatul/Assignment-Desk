@@ -61,6 +61,7 @@ builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<UserProfile>();
+    cfg.AddProfile<ClassProfile>();
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

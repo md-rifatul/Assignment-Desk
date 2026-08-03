@@ -9,9 +9,8 @@ namespace AssignmentDesk.Application.Interfaces.IRepository.Common
 {
     public interface IReadRepository<T> where T : class
     {
-        Task<T?> GetByIdAsync(int? id = null,
-    Expression<Func<T, bool>>? filter = null,
-    Func<IQueryable<T>, IQueryable<T>>? include = null);
+        Task<T?> GetByIdAsync(int id,
+            Func<IQueryable<T>, IQueryable<T>>? include = null);
 
         Task<List<T>> GetAllAsync(
             Expression<Func<T, bool>>? filter = null,
