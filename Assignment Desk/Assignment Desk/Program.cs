@@ -59,6 +59,7 @@ builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<ITeacherSubjectRepository, TeacherSubjectRepository>();
 builder.Services.AddScoped<IStudentClassRepository, StudentClassRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IClassService, ClassService>();
@@ -66,6 +67,7 @@ builder.Services.AddScoped<ISubjectService,SubjectService>();
 builder.Services.AddScoped<ITeacherSubjectService, TeacherSubjectService>();
 builder.Services.AddScoped<IStudentClassService, StudentClassService>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<UnitOfWork>();
@@ -78,7 +80,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<TeacherSubjectProfile>();
     cfg.AddProfile<StudentClassProfile>();
     cfg.AddProfile<AssignmentProfile>();
-    cfg.AddProfile<SubjectProfile>();
+    cfg.AddProfile<SubmissionProfile>();
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
