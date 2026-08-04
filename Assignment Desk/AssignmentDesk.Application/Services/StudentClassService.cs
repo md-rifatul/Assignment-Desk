@@ -46,7 +46,7 @@ namespace AssignmentDesk.Application.Services
 
         public async Task<StudentClassResponseDto> GetStudentClassById(int id)
         {
-            var sutdent = await _studentClassRepository.GetByIdAsync(id, include: q => q.Include(c => c.Class));
+            var sutdent = await _studentClassRepository.GetByIdAsync(id, include: q => q.Include(c => c.Class).Include(c=>c.Student));
             if(sutdent != null)
                 return _mapper.Map<StudentClassResponseDto>(sutdent);
             throw new ArgumentNullException();

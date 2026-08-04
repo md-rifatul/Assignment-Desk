@@ -7,10 +7,10 @@ namespace Assignment_Desk.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IAdminService _adminService;
-        public AdminController(IAdminService adminService)
+        public UserController(IAdminService adminService)
         {
             _adminService = adminService;
         }
