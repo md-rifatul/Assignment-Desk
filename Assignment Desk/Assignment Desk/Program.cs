@@ -77,6 +77,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<SubjectProfile>();
     cfg.AddProfile<TeacherSubjectProfile>();
     cfg.AddProfile<StudentClassProfile>();
+    cfg.AddProfile<AssignmentProfile>();
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

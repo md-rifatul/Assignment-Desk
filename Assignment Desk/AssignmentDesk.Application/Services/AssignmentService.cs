@@ -28,7 +28,7 @@ namespace AssignmentDesk.Application.Services
         {
             var assignment = _mapper.Map<Assignment>(dto);
             assignment.TeacherId = teacherId;
-            assignment.CreatedAt = DateTime.Now;
+            assignment.CreatedAt = DateTime.UtcNow;
 
             await _createAssignmentRepository.AddAsync(assignment);
             await _unitOfWork.CommitAsync();    

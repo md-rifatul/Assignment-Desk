@@ -26,7 +26,11 @@ namespace AssignmentDesk.Infrastructure.Repositories
 
         public async Task<IEnumerable<Assignment>> GetAllAssignmentsByTeacherIdAsync(int teacherId)
         {
-            return await _context.Assignments.Where(x => x.TeacherId == teacherId).ToListAsync();
+            return await _context.Assignments
+                    .Include(x => x.Subject)
+                    .Include(x => x.Teacher)
+                    .Where(x => x.TeacherId == teacherId)
+                    .ToListAsync();
         }
     }
 }
