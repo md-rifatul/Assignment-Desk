@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Application.Interfaces.IServices
 {
-    public interface ICreateAssignmentService
+    public interface IAssignmentService
     {
         Task AddAssignment(int teacherId, CreateAssignmentDto dto);
         Task DeleteAssignment(int id, int teacherId);

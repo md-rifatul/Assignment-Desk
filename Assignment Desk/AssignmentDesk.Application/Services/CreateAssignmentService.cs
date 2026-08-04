@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Application.Services
 {
-    public class CreateAssignmentService : ICreateAssignmentService
+    public class CreateAssignmentService : IAssignmentService
     {
         private readonly ICreateAssignmentRepository _createAssignmentRepository;
         private readonly IUnitOfWork _unitOfWork;
