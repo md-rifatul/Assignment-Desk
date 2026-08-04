@@ -12,6 +12,7 @@ using AssignmentDesk.Infrastructure.Repositories.Common;
 using AssignmentDesk.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -71,6 +72,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<ClassProfile>();
     cfg.AddProfile<SubjectProfile>();
     cfg.AddProfile<TeacherSubjectProfile>();
+    cfg.AddProfile<StudentClassProfile>();
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
