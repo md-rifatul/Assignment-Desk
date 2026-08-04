@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Infrastructure.Repositories
 {
-    public class CreateAssignmentRepository : Repository<Assignment>, ICreateAssignmentRepository
+    public class AssignmentRepository : Repository<Assignment>, IAssignmentRepository
     {
         private readonly ApplicationDbContext _context;
-        public CreateAssignmentRepository(ApplicationDbContext context) : base(context)
+        public AssignmentRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

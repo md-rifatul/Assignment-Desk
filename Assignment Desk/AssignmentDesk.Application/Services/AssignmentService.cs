@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Application.Services
 {
-    public class CreateAssignmentService : IAssignmentService
+    public class AssignmentService : IAssignmentService
     {
-        private readonly ICreateAssignmentRepository _createAssignmentRepository;
+        private readonly IAssignmentRepository _createAssignmentRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CreateAssignmentService(ICreateAssignmentRepository createAssignmentRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public AssignmentService(IAssignmentRepository createAssignmentRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _createAssignmentRepository = createAssignmentRepository;
             _unitOfWork = unitOfWork;

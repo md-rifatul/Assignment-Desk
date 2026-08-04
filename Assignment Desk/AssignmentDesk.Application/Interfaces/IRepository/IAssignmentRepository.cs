@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Application.Interfaces.IRepository
 {
-    public interface ICreateAssignmentRepository : IReadRepository<Assignment>, IWriteRepository<Assignment>
+    public interface IAssignmentRepository : IReadRepository<Assignment>, IWriteRepository<Assignment>
     {
         Task<IEnumerable<Assignment>> GetAllAssignmentsByTeacherIdAsync(int teacherId);
         Task<Assignment> GetAssignmentByIdAndTeacherIdAsync(int id,int teacherId);
