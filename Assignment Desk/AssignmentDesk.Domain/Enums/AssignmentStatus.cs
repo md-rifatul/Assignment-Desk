@@ -8,7 +8,8 @@ namespace AssignmentDesk.Domain.Enums
 {
     public enum AssignmentStatus
     {
-        Pending = 1,
-        Reviewed = 2
+        Draft = 0,
+        Publish = 1,
+        Closed = 2
     }
 }
