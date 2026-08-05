@@ -38,9 +38,21 @@ namespace AssignmentDesk.Application.Services
             return _mapper.Map<SubmissionResponseDto>(submission);
         }
 
-        public async Task Resubmit(int studentId, CreateSubmissionDto dto)
+
+        public async Task Resubmit(int assignmentId, int studentId, ResubmitSubmissionDto dto)
         {
-            var assignment = await _assignmentRepository.GetByIdAsync(dto.AssignmentId);
+            // Submission বের করো
+            var submission = await _submissionRepository.GetByStudentAndAssignmentAsync(studentId,assignmentId);
+
+            if (submission == null)
+                throw new Exception("Submission not found.");
+
+            // নিজের Submission কিনা
+            if (submission.StudentId != studentId)
+                throw new Exception("You are not authorized.");
+
+            // Assignment বের করো
+            var assignment = await _assignmentRepository.GetByIdAsync(submission.AssignmentId);
 
             if (assignment == null)
                 throw new Exception("Assignment not found.");
@@ -51,12 +63,14 @@ namespace AssignmentDesk.Application.Services
             if (assignment.Deadline < DateTime.UtcNow)
                 throw new Exception("Submission deadline is over.");
 
-            var submission = await _submissionRepository
-                .GetByStudentAndAssignmentAsync(studentId, dto.AssignmentId);
+            // PDF Validation
+            if (dto.PdfFile == null || dto.PdfFile.Length == 0)
+                throw new Exception("Please upload a PDF.");
 
-            if (submission == null)
-                throw new Exception("Submission not found.");
+            if (Path.GetExtension(dto.PdfFile.FileName).ToLower() != ".pdf")
+                throw new Exception("Only PDF file is allowed.");
 
+            // Folder
             var folder = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "wwwroot",
@@ -66,16 +80,22 @@ namespace AssignmentDesk.Application.Services
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
 
-            var oldFilePath = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot",
-                submission.FileUrl.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
-
-            if (File.Exists(oldFilePath))
+            // পুরনো File Delete
+            if (!string.IsNullOrWhiteSpace(submission.FileUrl))
             {
-                File.Delete(oldFilePath);
+                var oldFilePath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    submission.FileUrl.TrimStart('/')
+                        .Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+                if (File.Exists(oldFilePath))
+                {
+                    File.Delete(oldFilePath);
+                }
             }
 
+            // নতুন File Upload
             var fileName = Guid.NewGuid() +
                            Path.GetExtension(dto.PdfFile.FileName);
 
@@ -86,6 +106,7 @@ namespace AssignmentDesk.Application.Services
                 await dto.PdfFile.CopyToAsync(stream);
             }
 
+            // Update
             submission.FileUrl = "/uploads/submissions/" + fileName;
             submission.SubmittedAt = DateTime.UtcNow;
 

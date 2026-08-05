@@ -3,6 +3,7 @@ using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Application.Interfaces.IUnitOfWork;
 using AssignmentDesk.Domain.Entities;
+using AssignmentDesk.Domain.Enums;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace AssignmentDesk.Application.Services
             var assignment = _mapper.Map<Assignment>(dto);
             assignment.TeacherId = teacherId;
             assignment.CreatedAt = DateTime.UtcNow;
+            assignment.Status = AssignmentStatus.Publish;
 
             await _createAssignmentRepository.AddAsync(assignment);
             await _unitOfWork.CommitAsync();    

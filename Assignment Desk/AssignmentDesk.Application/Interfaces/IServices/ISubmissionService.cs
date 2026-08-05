@@ -10,7 +10,7 @@ namespace AssignmentDesk.Application.Interfaces.IServices
     public interface ISubmissionService
     {
         Task UploadSubmission(int studentId, CreateSubmissionDto dto);
-        Task Resubmit(int studentId, CreateSubmissionDto dto);
+        Task Resubmit(int assignmentId, int studentId, ResubmitSubmissionDto dto);
         Task<IEnumerable<SubmissionResponseDto>> GetAllSubmissions(int studentId);
         Task<SubmissionResponseDto> GetSubmission(int studentId, int assignmentId);
     }
