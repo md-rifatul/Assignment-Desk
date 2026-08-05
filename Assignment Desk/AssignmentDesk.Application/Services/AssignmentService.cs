@@ -16,24 +16,45 @@ namespace AssignmentDesk.Application.Services
     public class AssignmentService : IAssignmentService
     {
         private readonly IAssignmentRepository _createAssignmentRepository;
+        private readonly ISubjectRepository _subjectRepository;
+        private readonly IClassRepository _classRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public AssignmentService(IAssignmentRepository createAssignmentRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public AssignmentService(IAssignmentRepository createAssignmentRepository,ISubjectRepository subjectRepository,IClassRepository classRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _createAssignmentRepository = createAssignmentRepository;
+            _subjectRepository = subjectRepository;
+            _classRepository = classRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task AddAssignment(int teacherId, CreateAssignmentDto dto)
         {
+            var subject = await _subjectRepository.GetByIdAsync(dto.SubjectId);
+
+            if (subject == null)
+                throw new Exception("Subject not found.");
+
+            // Class আছে কিনা
+            var classEntity = await _classRepository.GetByIdAsync(dto.ClassId);
+
+            if (classEntity == null)
+                throw new Exception("Class not found.");
+
+            // Subject ওই Class-এর কিনা
+            if (subject.ClassId != dto.ClassId)
+                throw new Exception("Selected subject does not belong to the selected class.");
+
+            // Assignment Create
             var assignment = _mapper.Map<Assignment>(dto);
+
             assignment.TeacherId = teacherId;
             assignment.CreatedAt = DateTime.UtcNow;
             assignment.Status = AssignmentStatus.Publish;
 
             await _createAssignmentRepository.AddAsync(assignment);
-            await _unitOfWork.CommitAsync();    
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteAssignment(int id, int teacherId)

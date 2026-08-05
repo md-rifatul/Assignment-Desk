@@ -21,6 +21,9 @@ namespace AssignmentDesk.Domain.Entities
 
         public AssignmentStatus Status { get; set; }
 
+        public int ClassId { get; set; }
+        public Class Class { get; set; }
+
         public int SubjectId { get; set; }
 
         public Subject Subject { get; set; }

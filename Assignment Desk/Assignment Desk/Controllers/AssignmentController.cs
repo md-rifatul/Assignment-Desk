@@ -44,5 +44,11 @@ namespace Assignment_Desk.Controllers
             await _assignmentService.UpdateAssignment(id, teacherId, dto);
             return Ok();
         }
+
+        //[HttpGet("my-assignments")]
+        //public Task<IActionResult> GetMyAssignments()
+        //{
+
+        //}
     }
 }

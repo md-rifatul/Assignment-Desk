@@ -12,6 +12,7 @@ namespace AssignmentDesk.Application.Auth.DTOs
         public string Description { get; set; }
         public DateTime Deadline { get; set; }
         public decimal MaximumMarks { get; set; }
+        public int ClassId { get; set; }
         public int SubjectId { get; set; }
     }
 }
