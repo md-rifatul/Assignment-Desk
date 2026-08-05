@@ -45,10 +45,12 @@ namespace Assignment_Desk.Controllers
             return Ok();
         }
 
-        //[HttpGet("my-assignments")]
-        //public Task<IActionResult> GetMyAssignments()
-        //{
-
-        //}
+        [HttpGet("my-assignments")]
+        public async Task<IActionResult> GetMyAssignments()
+        {
+            var studentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var assignments = await _assignmentService.GetMyAssignments(studentId);
+            return Ok(assignments);
+        }
     }
 }

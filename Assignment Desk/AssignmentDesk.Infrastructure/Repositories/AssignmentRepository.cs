@@ -1,5 +1,6 @@
 ﻿using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Domain.Entities;
+using AssignmentDesk.Domain.Enums;
 using AssignmentDesk.Infrastructure.Data;
 using AssignmentDesk.Infrastructure.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,11 @@ namespace AssignmentDesk.Infrastructure.Repositories
                     .Include(x => x.Teacher)
                     .Where(x => x.TeacherId == teacherId)
                     .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Assignment>> GetAllAssignmentsByClassIdAsync(int classId)
+        {
+            return await _context.Assignments.Include(x=>x.Subject).Where(x=>x.ClassId==classId && x.Status==AssignmentStatus.Publish).ToListAsync();
         }
     }
 }

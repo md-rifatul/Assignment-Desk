@@ -12,6 +12,7 @@ namespace AssignmentDesk.Application.Interfaces.IRepository
     {
         Task<IEnumerable<Assignment>> GetAllAssignmentsByTeacherIdAsync(int teacherId);
         Task<Assignment> GetAssignmentByIdAndTeacherIdAsync(int id,int teacherId);
+        Task<IEnumerable<Assignment>> GetAllAssignmentsByClassIdAsync(int classId);
 
     }
 }

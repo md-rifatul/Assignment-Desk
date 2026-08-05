@@ -24,5 +24,11 @@ namespace AssignmentDesk.Infrastructure.Repositories
         {
             return await _context.StudentClasses.AnyAsync(predicate);
         }
+
+        public async Task<StudentClass?> GetByStudentIdAsync(int studentId)
+        {
+            return await _context.StudentClasses
+                        .FirstOrDefaultAsync(x => x.StudentId == studentId);
+        }
     }
 }

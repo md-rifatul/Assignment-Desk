@@ -14,5 +14,7 @@ namespace AssignmentDesk.Application.Interfaces.IServices
         Task UpdateAssignment(int id, int teacherId, CreateAssignmentDto dto);
         Task<AssignmentResponseDto> GetAssignmentById(int id, int teacherId);
         Task<IEnumerable<AssignmentResponseDto>> GetAllAssignments(int teacherId);
+        Task<IEnumerable<AssignmentResponseDto>> GetMyAssignments(int studentId);
+
     }
 }
