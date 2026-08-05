@@ -32,6 +32,12 @@ namespace AssignmentDesk.Application.Services
             return _mapper.Map<IEnumerable<SubmissionResponseDto>>(submissions);
         }
 
+        public async Task<IEnumerable<SubmissionResponseDto>> GetStudentSubmissions(int teacherId)
+        {
+            var submissions = await _submissionRepository.GetSubmissionsByTeacherAsync(teacherId);
+            return _mapper.Map<IEnumerable<SubmissionResponseDto>>(submissions);
+        }
+
         public async Task<SubmissionResponseDto> GetSubmission(int studentId, int assignmentId)
         {
             var submission = await _submissionRepository.GetByStudentAndAssignmentAsync(studentId, assignmentId);

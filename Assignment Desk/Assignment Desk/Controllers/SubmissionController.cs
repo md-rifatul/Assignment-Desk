@@ -30,11 +30,13 @@ namespace Assignment_Desk.Controllers
             await _submissionService.Resubmit(id, studentId, dto);
             return Ok();
         }
-        //[HttpGet("all")]
-        //public Task<IActionResult> AllAssignmentsBasedOnStudent()
-        //{
-
-        //}
+        [HttpGet("teacher/submissions")]
+        public async Task<IActionResult> GetStudentSubmissions()
+        {
+            int teacherId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var result = await _submissionService.GetStudentSubmissions(teacherId);
+            return Ok(result);
+        }
 
     }
 }

@@ -28,5 +28,13 @@ namespace AssignmentDesk.Infrastructure.Repositories
         {
             return await _context.Submissions.FirstOrDefaultAsync(x=>x.StudentId==studentId&&x.AssignmentId==assignmentId);
         }
+
+        public async Task<IEnumerable<Submission>> GetSubmissionsByTeacherAsync(int teacherId)
+        {
+            return await _context.Submissions
+                .Include(x => x.Student)
+                .Include(x => x.Assignment)
+                .Where(x => x.Assignment.TeacherId == teacherId).ToListAsync();
+        }
     }
 }

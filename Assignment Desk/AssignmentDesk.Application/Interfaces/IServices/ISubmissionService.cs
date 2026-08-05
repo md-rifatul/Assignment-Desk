@@ -13,5 +13,6 @@ namespace AssignmentDesk.Application.Interfaces.IServices
         Task Resubmit(int assignmentId, int studentId, ResubmitSubmissionDto dto);
         Task<IEnumerable<SubmissionResponseDto>> GetAllSubmissions(int studentId);
         Task<SubmissionResponseDto> GetSubmission(int studentId, int assignmentId);
+        Task<IEnumerable<SubmissionResponseDto>> GetStudentSubmissions(int teacherId);
     }
 }
