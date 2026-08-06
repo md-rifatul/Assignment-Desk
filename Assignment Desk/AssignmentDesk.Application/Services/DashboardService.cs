@@ -17,12 +17,16 @@ namespace AssignmentDesk.Application.Services
         private readonly IClassRepository _classRepository;
         private readonly ISubjectRepository _subjectRepository;
         private readonly IAssignmentRepository _assignmentRepository;
-        public DashboardService(IUserRepository userRepository , IClassRepository classRepository, ISubjectRepository subjectRepository, IAssignmentRepository assignmentRepository)
+        private readonly ITeacherSubjectRepository _teacherSubjectRepository;
+        private readonly ISubmissionRepository _submissionRepository;
+        public DashboardService(IUserRepository userRepository , IClassRepository classRepository, ISubjectRepository subjectRepository, IAssignmentRepository assignmentRepository, ITeacherSubjectRepository teacherSubjectRepository, ISubmissionRepository submissionRepository)
         {
             _userRepository = userRepository;
             _classRepository = classRepository;
             _subjectRepository = subjectRepository;
             _assignmentRepository = assignmentRepository;
+            _teacherSubjectRepository = teacherSubjectRepository;
+            _submissionRepository = submissionRepository;
         }
         public async Task<AdminDashboardDto> GetAdminDashboard()
         {
@@ -41,9 +45,14 @@ namespace AssignmentDesk.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<TeacherDashboardDto> GetTeacherDashboard()
+        public async Task<TeacherDashboardDto> GetTeacherDashboard(int teacherId)
         {
-            throw new NotImplementedException();
+            return new TeacherDashboardDto
+            {
+                MySubjects = await _teacherSubjectRepository.GetSubjectCountByTeacherIdAsync(teacherId),
+                MyAssignments = await _assignmentRepository.GetAssignmentCountByTeacherIdAsync(teacherId),
+                PendingReview = await _submissionRepository.GetPendingReviewCountAsync(teacherId)
+            };
         }
     }
 }

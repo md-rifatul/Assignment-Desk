@@ -43,5 +43,10 @@ namespace AssignmentDesk.Infrastructure.Repositories
         {
             return await _context.Assignments.CountAsync();
         }
+
+        public async Task<int> GetAssignmentCountByTeacherIdAsync(int teacherId)
+        {
+            return await _context.Assignments.CountAsync(x => x.TeacherId == teacherId && x.Status==AssignmentStatus.Publish);
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace AssignmentDesk.Application.Interfaces.IRepository
         Task<Assignment> GetAssignmentByIdAndTeacherIdAsync(int id,int teacherId);
         Task<IEnumerable<Assignment>> GetAllAssignmentsByClassIdAsync(int classId);
         Task<int> CountAsync();
+        Task<int> GetAssignmentCountByTeacherIdAsync(int teacherId);
 
     }
 }

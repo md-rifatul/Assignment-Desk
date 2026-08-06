@@ -14,6 +14,7 @@ namespace AssignmentDesk.Application.Interfaces.IRepository
         Task<IEnumerable<Submission>> GetAllAssignmentsByStudentId(int studentId);
         Task<IEnumerable<Submission>> GetSubmissionsByTeacherAsync(int teacherId);
         Task<Submission?> GetSubmissionWithAssignmentAsyncBySubmissionId(int submissionId);
+        Task<int> GetPendingReviewCountAsync(int teacherId);
 
     }
 }

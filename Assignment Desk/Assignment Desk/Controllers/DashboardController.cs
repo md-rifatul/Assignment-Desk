@@ -1,6 +1,7 @@
 ﻿using AssignmentDesk.Application.Interfaces.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Assignment_Desk.Controllers
 {
@@ -17,6 +18,12 @@ namespace Assignment_Desk.Controllers
         public async Task<IActionResult> AdminDashboard()
         {
              return Ok(await _dashboardService.GetAdminDashboard());
+        }
+        [HttpGet("teacher")]
+        public async Task<IActionResult> TeacherDashboard()
+        {
+            int teacherId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            return Ok(await _dashboardService.GetTeacherDashboard(teacherId));
         }
     }
 }

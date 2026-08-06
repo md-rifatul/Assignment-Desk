@@ -12,6 +12,6 @@ namespace AssignmentDesk.Application.Auth.DTOs
 
         public int MyAssignments { get; set; }
 
-        public int PendingSubmissions { get; set; }
+        public int PendingReview { get; set; }
     }
 }

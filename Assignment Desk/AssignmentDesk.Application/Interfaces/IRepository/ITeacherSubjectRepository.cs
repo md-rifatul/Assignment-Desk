@@ -11,5 +11,6 @@ namespace AssignmentDesk.Application.Interfaces.IRepository
     public interface ITeacherSubjectRepository : IReadRepository<TeacherSubject>, IWriteRepository<TeacherSubject>
     {
         Task<IEnumerable<Subject>> SearchAsync(string search);
+        Task<int> GetSubjectCountByTeacherIdAsync(int teacherId);
     }
 }

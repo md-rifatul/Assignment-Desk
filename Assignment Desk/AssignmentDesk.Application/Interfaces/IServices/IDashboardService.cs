@@ -10,7 +10,7 @@ namespace AssignmentDesk.Application.Interfaces.IServices
     public interface IDashboardService
     {
         Task<AdminDashboardDto> GetAdminDashboard();
-        Task<TeacherDashboardDto> GetTeacherDashboard();
+        Task<TeacherDashboardDto> GetTeacherDashboard(int teacherId);
         Task<StudentDashboardDto> GetStudentDashboard();
     }
 }
