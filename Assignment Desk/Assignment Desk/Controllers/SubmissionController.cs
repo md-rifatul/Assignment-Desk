@@ -37,6 +37,14 @@ namespace Assignment_Desk.Controllers
             var result = await _submissionService.GetStudentSubmissions(teacherId);
             return Ok(result);
         }
+        [HttpPut("review/{submissionId}")]
+        public async Task<IActionResult> ReviewSubmission(int submissionId, [FromBody] ReviewSubmissionDto dto)
+        {
+            int teacherId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            await _submissionService.ReviewSubmission(submissionId,teacherId,dto);
+            return Ok();
+        }
 
     }
 }
