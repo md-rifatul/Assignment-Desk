@@ -25,7 +25,15 @@ namespace AssignmentDesk.Application.Mapping
                 .ForMember(dest => dest.Feedback, opt => opt.Ignore());
 
 
-            CreateMap<Submission, SubmissionResponseDto>();
+            CreateMap<Submission, SubmissionResponseDto>()
+                .ForMember(d => d.StudentName,
+                    o => o.MapFrom(s => s.Student.FullName))
+
+                .ForMember(d => d.AssignmentTitle,
+                    o => o.MapFrom(s => s.Assignment.Title))
+
+                .ForMember(d => d.SubjectName,
+                    o => o.MapFrom(s => s.Assignment.Subject.Name));
         }
     }
 }

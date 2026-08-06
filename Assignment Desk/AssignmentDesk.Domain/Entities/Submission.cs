@@ -25,7 +25,7 @@ namespace AssignmentDesk.Domain.Entities
 
         public string? Feedback { get; set; }
 
-        public AssignmentStatus Status { get; set; }
+        public SubmissionStatus Status { get; set; }
 
         public DateTime SubmittedAt { get; set; }
     }

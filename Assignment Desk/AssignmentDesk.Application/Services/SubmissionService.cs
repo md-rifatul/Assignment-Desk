@@ -133,6 +133,7 @@ namespace AssignmentDesk.Application.Services
 
             submission.Marks = dto.Marks;
             submission.Feedback = dto.Feedback;
+            submission.Status = SubmissionStatus.Reviewed;
 
             await _unitOfWork.CommitAsync();
         }
@@ -179,6 +180,7 @@ namespace AssignmentDesk.Application.Services
             submission.StudentId = studentId;
             submission.FileUrl = "/uploads/submissions/" + fileName;
             submission.SubmittedAt = DateTime.UtcNow;
+            submission.Status = SubmissionStatus.Submitted;
             
             await _submissionRepository.AddAsync(submission);
             await _unitOfWork.CommitAsync();

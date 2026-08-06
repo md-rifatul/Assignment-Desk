@@ -34,6 +34,7 @@ namespace AssignmentDesk.Infrastructure.Repositories
             return await _context.Submissions
                 .Include(x => x.Student)
                 .Include(x => x.Assignment)
+                .ThenInclude(x=>x.Subject)
                 .Where(x => x.Assignment.TeacherId == teacherId).ToListAsync();
         }
 

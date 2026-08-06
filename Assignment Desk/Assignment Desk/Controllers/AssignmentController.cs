@@ -45,7 +45,7 @@ namespace Assignment_Desk.Controllers
             return Ok();
         }
 
-        [HttpGet("my-assignments")]
+        [HttpGet("student/my-assignments")]
         public async Task<IActionResult> GetMyAssignments()
         {
             var studentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
