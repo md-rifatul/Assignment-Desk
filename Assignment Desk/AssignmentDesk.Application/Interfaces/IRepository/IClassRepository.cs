@@ -11,6 +11,7 @@ namespace AssignmentDesk.Application.Interfaces.IRepository
     public interface IClassRepository : IReadRepository<Class>, IWriteRepository<Class>
     {
         Task<IEnumerable<Class>> SearchAsync(string search);
+        Task<int> CountAsync();
 
     }
 }

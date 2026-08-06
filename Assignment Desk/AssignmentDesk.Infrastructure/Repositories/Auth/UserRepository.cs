@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,6 +57,11 @@ namespace AssignmentDesk.Infrastructure.Repositories.Auth
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             return user;
+        }
+
+        public async Task<int> CountAsync(Expression<Func<User, bool>> predicate)
+        {
+            return await _context.Users.CountAsync(predicate);
         }
     }
 }

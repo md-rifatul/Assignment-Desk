@@ -38,5 +38,10 @@ namespace AssignmentDesk.Infrastructure.Repositories
         {
             return await _context.Assignments.Include(x=>x.Subject).Where(x=>x.ClassId==classId && x.Status==AssignmentStatus.Publish).ToListAsync();
         }
+
+        public async Task<int> CountAsync()
+        {
+            return await _context.Assignments.CountAsync();
+        }
     }
 }
