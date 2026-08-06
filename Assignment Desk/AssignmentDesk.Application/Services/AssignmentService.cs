@@ -55,7 +55,7 @@ namespace AssignmentDesk.Application.Services
 
             assignment.TeacherId = teacherId;
             assignment.CreatedAt = DateTime.UtcNow;
-            assignment.Status = AssignmentStatus.Publish;
+            assignment.Status = dto.Status;
 
             await _createAssignmentRepository.AddAsync(assignment);
             await _unitOfWork.CommitAsync();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AssignmentDesk.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace AssignmentDesk.Application.Auth.DTOs
         public string Description { get; set; }
         public DateTime Deadline { get; set; }
         public decimal MaximumMarks { get; set; }
+        public AssignmentStatus Status { get; set; }
         public int ClassId { get; set; }
         public int SubjectId { get; set; }
     }
