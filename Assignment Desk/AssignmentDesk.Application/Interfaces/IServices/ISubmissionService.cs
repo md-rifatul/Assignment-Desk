@@ -14,5 +14,6 @@ namespace AssignmentDesk.Application.Interfaces.IServices
         Task<IEnumerable<SubmissionResponseDto>> GetAllSubmissions(int studentId);
         Task<SubmissionResponseDto> GetSubmission(int studentId, int assignmentId);
         Task<IEnumerable<SubmissionResponseDto>> GetStudentSubmissions(int teacherId);
+        Task ReviewSubmission(int submissionId,int teacherId,ReviewSubmissionDto dto);
     }
 }

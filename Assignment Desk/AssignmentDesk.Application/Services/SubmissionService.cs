@@ -119,8 +119,23 @@ namespace AssignmentDesk.Application.Services
             await _unitOfWork.CommitAsync();
         }
 
+        public async Task ReviewSubmission(int submissionId, int teacherId, ReviewSubmissionDto dto)
+        {
+            var submission = await _submissionRepository.GetSubmissionWithAssignmentAsyncBySubmissionId(submissionId);
+            if (submission == null)
+                throw new Exception("Submission not found.");
+            if (submission.Assignment.TeacherId != teacherId)
+                throw new Exception("Your are not allowed for review");
+            if (dto.Marks > submission.Assignment.MaximumMarks)
+                throw new Exception("Marks exceed maximum marks.");
+            if (dto.Marks < 0)
+                throw new Exception("Invalid Marks");
 
+            submission.Marks = dto.Marks;
+            submission.Feedback = dto.Feedback;
 
+            await _unitOfWork.CommitAsync();
+        }
 
         public async Task UploadSubmission(int studentId, CreateSubmissionDto dto)
         {

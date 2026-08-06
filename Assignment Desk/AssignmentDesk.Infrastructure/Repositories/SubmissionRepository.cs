@@ -36,5 +36,12 @@ namespace AssignmentDesk.Infrastructure.Repositories
                 .Include(x => x.Assignment)
                 .Where(x => x.Assignment.TeacherId == teacherId).ToListAsync();
         }
+
+        public async Task<Submission?> GetSubmissionWithAssignmentAsyncBySubmissionId(int submissionId)
+        {
+            return await _context.Submissions
+                .Include(x=>x.Assignment)
+                .FirstOrDefaultAsync(x=>x.Id==submissionId);
+        }
     }
 }
