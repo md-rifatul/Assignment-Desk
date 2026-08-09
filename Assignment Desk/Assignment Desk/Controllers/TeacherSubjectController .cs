@@ -1,5 +1,6 @@
 ﻿using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Assignment_Desk.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateTeacherToSubject([FromBody] AssignTeacherSubjectDto dto)
         {
             if (dto == null)
@@ -25,6 +27,7 @@ namespace Assignment_Desk.Controllers
             return Ok();
         }
         [HttpPost("delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteTeacherToSubject(int id)
         {
             _teacherSubjectService.DeleteTeacher(id);
@@ -32,6 +35,7 @@ namespace Assignment_Desk.Controllers
         }
 
         [HttpGet("get{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetSubjectsByTeacherId(int id)
         {
             var subjects = await _teacherSubjectService.GetSubjectsByTeacherId(id);
