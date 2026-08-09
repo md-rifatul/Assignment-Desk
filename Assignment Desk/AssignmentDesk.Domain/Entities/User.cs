@@ -15,7 +15,7 @@ namespace AssignmentDesk.Domain.Entities
 
         public string Email { get; set; }
 
-        public string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; }
 
         public UserRole Role { get; set; }
 
@@ -25,5 +25,9 @@ namespace AssignmentDesk.Domain.Entities
 
         public string? PasswordResetTokenHash { get; set; }
         public DateTime? PasswordResetTokenExpiry { get; set; }
+
+        public string? ActivationTokenHash { get; set; }
+
+        public DateTime? ActivationTokenExpiry { get; set; }
     }
 }

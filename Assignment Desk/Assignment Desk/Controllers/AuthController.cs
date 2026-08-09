@@ -70,4 +70,15 @@ public class AuthController : ControllerBase
 
         return Ok("Password reset successfully.");
     }
+
+
+    [HttpPost("activate-account")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ActivateAccount(
+    [FromBody] ActivateAccountDto dto)
+    {
+        await _authService.ActivateAccount(dto);
+
+        return Ok("Account activated successfully.");
+    }
 }

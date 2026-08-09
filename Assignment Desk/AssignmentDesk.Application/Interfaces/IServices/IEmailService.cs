@@ -9,5 +9,7 @@ namespace AssignmentDesk.Application.Interfaces.IServices
     public interface IEmailService
     {
         Task SendPasswordResetEmailAsync(string email, string resetLink);
+        Task SendAccountActivationEmailAsync(string email,string fullName,string activationLink);
     }
 }
+  

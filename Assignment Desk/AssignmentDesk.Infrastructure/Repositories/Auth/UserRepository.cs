@@ -76,5 +76,13 @@ namespace AssignmentDesk.Infrastructure.Repositories.Auth
                 .FirstOrDefaultAsync(x =>
                     x.PasswordResetTokenHash == tokenHash);
         }
+
+        public async Task<User?> GetUserByActivationTokenHashAsync(
+            string tokenHash)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(x =>
+                    x.ActivationTokenHash == tokenHash);
+        }
     }
 }

@@ -5,11 +5,15 @@ using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Application.Interfaces.IUnitOfWork;
 using AssignmentDesk.Domain.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace AssignmentDesk.Application.Services
 {
@@ -18,28 +22,68 @@ namespace AssignmentDesk.Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public AdminService(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
+        public AdminService(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _emailService = emailService;
+            _configuration = configuration;
         }
 
         public async Task Create(RegisterDto dto)
         {
-            var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
+            var existingUser =
+                await _userRepository.GetByEmailAsync(dto.Email);
 
             if (existingUser != null)
                 throw new Exception("Email already exists.");
 
             var user = _mapper.Map<User>(dto);
 
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-            user.IsActive = true;
+            // Generate activation token
+            var tokenBytes =
+                RandomNumberGenerator.GetBytes(32);
+
+            var token =
+                WebEncoders.Base64UrlEncode(tokenBytes);
+
+            // Hash token before storing in database
+            var tokenHash =
+                Convert.ToBase64String(
+                    SHA256.HashData(
+                        Encoding.UTF8.GetBytes(token)
+                    )
+                );
+
+            user.ActivationTokenHash = tokenHash;
+
+            user.ActivationTokenExpiry =
+                DateTime.UtcNow.AddHours(24);
+
+            // User cannot login until activation
+            user.IsActive = false;
+
             user.CreatedAt = DateTime.UtcNow;
 
             await _userRepository.AddAsync(user);
+
             await _unitOfWork.CommitAsync();
+
+            // Create activation link
+            var clientBaseUrl =
+                _configuration["AppSettings:ClientBaseUrl"];
+
+            var activationLink =
+                $"{clientBaseUrl}/activate-account?token={token}";
+
+            // Send activation email
+            await _emailService.SendAccountActivationEmailAsync(
+                user.Email,
+                user.FullName,
+                activationLink);
         }
 
         public async Task Delete(int id)

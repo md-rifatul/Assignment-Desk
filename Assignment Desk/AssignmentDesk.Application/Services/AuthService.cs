@@ -26,6 +26,50 @@ namespace AssignmentDesk.Application.Services
             _emailService = emailService;
             _configuration = configuration;
         }
+
+        public async Task ActivateAccount(ActivateAccountDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Token))
+                throw new Exception("Activation token is required.");
+
+            if (string.IsNullOrWhiteSpace(dto.Password))
+                throw new Exception("Password is required.");
+
+            if (dto.Password != dto.ConfirmPassword)
+                throw new Exception("Passwords do not match.");
+
+            var tokenHash = Convert.ToBase64String(
+                SHA256.HashData(
+                    Encoding.UTF8.GetBytes(dto.Token)
+                )
+            );
+
+            var user = await _userRepository
+                .GetUserByActivationTokenHashAsync(tokenHash);
+
+            if (user == null)
+                throw new Exception("Invalid activation token.");
+
+            if (user.ActivationTokenExpiry == null ||
+                user.ActivationTokenExpiry < DateTime.UtcNow)
+            {
+                throw new Exception("Activation token has expired.");
+            }
+
+            user.PasswordHash =
+                BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
+            user.IsActive = true;
+
+            user.ActivationTokenHash = null;
+            user.ActivationTokenExpiry = null;
+
+            await _unitOfWork.CommitAsync();
+        }
+
+
+
+
         public async Task ForgotPassword(ForgotPasswordDto dto)
         {
             var user = await _userRepository.GetUserByEmail(dto.Email);

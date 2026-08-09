@@ -20,6 +20,7 @@ namespace AssignmentDesk.Application.Interfaces.IAuth
         Task<int> CountAsync(Expression<Func<User, bool>> predicate);
         Task<User?> GetUserByEmail(string email);
         Task<User?> GetUserByResetTokenHashAsync(string tokenHash);
+        Task<User?> GetUserByActivationTokenHashAsync(string tokenHash);
 
     }
 }

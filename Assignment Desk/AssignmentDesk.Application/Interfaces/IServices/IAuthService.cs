@@ -11,5 +11,6 @@ namespace AssignmentDesk.Application.Interfaces.IServices
     {
         Task ForgotPassword(ForgotPasswordDto dto);
         Task ResetPassword(ResetPasswordDto dto);
+        Task ActivateAccount(ActivateAccountDto dto);
     }
 }

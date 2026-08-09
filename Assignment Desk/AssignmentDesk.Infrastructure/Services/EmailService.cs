@@ -20,6 +20,99 @@ namespace AssignmentDesk.Infrastructure.Services
         {
             _settings = settings.Value;
         }
+
+        public async Task SendAccountActivationEmailAsync(
+            string email,
+            string fullName,
+            string activationLink)
+        {
+            var message = new MimeMessage();
+
+            message.From.Add(
+                new MailboxAddress(
+                    "AssignmentDesk",
+                    _settings.Email));
+
+            message.To.Add(
+                MailboxAddress.Parse(email));
+
+            message.Subject =
+                "Welcome to AssignmentDesk - Activate Your Account";
+
+            var body = $"""
+        <html>
+        <body style="font-family: Arial, sans-serif;">
+
+            <h2>Welcome to AssignmentDesk</h2>
+
+            <p>Hello {fullName},</p>
+
+            <p>
+                Your AssignmentDesk account has been created
+                by an administrator.
+            </p>
+
+            <p>
+                Please activate your account and create your
+                password by clicking the button below.
+            </p>
+
+            <p>
+                <a href="{activationLink}"
+                   style="
+                       display:inline-block;
+                       padding:12px 20px;
+                       background-color:#007bff;
+                       color:white;
+                       text-decoration:none;
+                       border-radius:5px;
+                   ">
+                    Activate Your Account
+                </a>
+            </p>
+
+            <p>
+                This activation link will expire in
+                <strong>24 hours</strong>.
+            </p>
+
+            <p>
+                If you did not expect this account,
+                please ignore this email.
+            </p>
+
+            <p>
+                Regards,<br/>
+                AssignmentDesk Team
+            </p>
+
+        </body>
+        </html>
+        """;
+
+            message.Body = new BodyBuilder
+            {
+                HtmlBody = body
+            }.ToMessageBody();
+
+            using var smtp = new SmtpClient();
+
+            await smtp.ConnectAsync(
+                _settings.SmtpServer,
+                _settings.Port,
+                SecureSocketOptions.StartTls);
+
+            await smtp.AuthenticateAsync(
+                _settings.Email,
+                _settings.Password);
+
+            await smtp.SendAsync(message);
+
+            await smtp.DisconnectAsync(true);
+        }
+
+
+
         public async Task SendPasswordResetEmailAsync(string email, string resetLink)
         {
             var message = new MimeMessage();
