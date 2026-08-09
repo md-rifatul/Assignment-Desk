@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Assignment_Desk</RootNamespace>
+    
+    <UserSecretsId>AssignmentDesk-Api</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

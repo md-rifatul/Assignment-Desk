@@ -2,6 +2,7 @@
 using AssignmentDesk.Application.Interfaces.IAuth;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Application.Interfaces.IUnitOfWork;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace AssignmentDesk.Application.Services
 
             var tokenBytes = RandomNumberGenerator.GetBytes(32);
 
-            var token = Convert.ToBase64String(tokenBytes);
+            var token = WebEncoders.Base64UrlEncode(tokenBytes);
 
             var tokenHash = Convert.ToBase64String(
                 SHA256.HashData(

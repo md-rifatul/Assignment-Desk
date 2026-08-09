@@ -86,6 +86,14 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<SubmissionProfile>();
 });
 
+
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
