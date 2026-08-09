@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentDesk.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentDesk.Infrastructure", "AssignmentDesk.Infrastructure\AssignmentDesk.Infrastructure.csproj", "{7EE75317-CF25-43EB-BBA0-A08B52E50EA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentDesk.Tests", "AssignmentDesk.Tests\AssignmentDesk.Tests.csproj", "{CCB522FA-D3BE-4445-B3B9-D34BA1563657}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7EE75317-CF25-43EB-BBA0-A08B52E50EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EE75317-CF25-43EB-BBA0-A08B52E50EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EE75317-CF25-43EB-BBA0-A08B52E50EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCB522FA-D3BE-4445-B3B9-D34BA1563657}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCB522FA-D3BE-4445-B3B9-D34BA1563657}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCB522FA-D3BE-4445-B3B9-D34BA1563657}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCB522FA-D3BE-4445-B3B9-D34BA1563657}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
