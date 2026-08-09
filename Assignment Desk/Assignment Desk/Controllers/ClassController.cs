@@ -1,5 +1,6 @@
 ﻿using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Assignment_Desk.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> CreateClass([FromBody] CreateClassDto dto)
         {
             if (!ModelState.IsValid)
@@ -28,6 +30,7 @@ namespace Assignment_Desk.Controllers
         }
 
         [HttpPut("update/{id}")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> UpdateClass(int id, [FromBody] CreateClassDto dto)
         {
             if (!ModelState.IsValid)
@@ -36,6 +39,7 @@ namespace Assignment_Desk.Controllers
             return Ok();
         }
         [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteClass(int id)
         {
             await _classService.DeleteClass(id);
@@ -43,6 +47,7 @@ namespace Assignment_Desk.Controllers
         }
 
         [HttpGet("get/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetClassById(int id)
         {
             var cls = await _classService.GetClassById(id);
@@ -50,6 +55,7 @@ namespace Assignment_Desk.Controllers
         }
 
         [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetClasses()
         {
             var classes = await _classService.GetAllClasses();
