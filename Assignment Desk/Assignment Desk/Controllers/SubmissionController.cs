@@ -1,6 +1,7 @@
 ﻿using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -17,6 +18,7 @@ namespace Assignment_Desk.Controllers
             _submissionService = submissionService;
         }
         [HttpPost("submit")]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> UploadSubmission([FromForm] CreateSubmissionDto dto)
         {
             int studentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -24,6 +26,7 @@ namespace Assignment_Desk.Controllers
             return Ok();
         }
         [HttpPut("resubmit/{id}")]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> ResubmitSolution(int id, [FromForm] ResubmitSubmissionDto dto)
         {
             int studentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -31,6 +34,7 @@ namespace Assignment_Desk.Controllers
             return Ok();
         }
         [HttpGet("teacher/submissions")]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> GetStudentSubmissions()
         {
             int teacherId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -38,6 +42,7 @@ namespace Assignment_Desk.Controllers
             return Ok(result);
         }
         [HttpPut("review/{submissionId}")]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> ReviewSubmission(int submissionId, [FromBody] ReviewSubmissionDto dto)
         {
             int teacherId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
