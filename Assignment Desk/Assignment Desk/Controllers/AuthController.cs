@@ -4,6 +4,7 @@ using AssignmentDesk.Domain.Entities;
 using AssignmentDesk.Domain.Enums;
 using AssignmentDesk.Infrastructure.Repositories.Auth;
 using AssignmentDesk.Infrastructure.Repositories.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Assignment_Desk.Controllers;
@@ -24,6 +25,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
+    [Authorize(Roles ="Admin")]
     public async Task<IActionResult> Register(AdminRegisterDto dto)
     {
         // Check email already exists
