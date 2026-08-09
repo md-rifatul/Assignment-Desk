@@ -1,6 +1,7 @@
 ﻿using AssignmentDesk.Application.Interfaces.IAuth;
 using AssignmentDesk.Application.Interfaces.IUnitOfWork;
 using AssignmentDesk.Domain.Entities;
+using AssignmentDesk.Domain.Enums;
 using AssignmentDesk.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -49,7 +50,8 @@ namespace AssignmentDesk.Infrastructure.Repositories.Auth
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            var users = _context.Users.ToListAsync();
+            var users = _context.Users
+                .Where(x=>x.Role!=UserRole.Admin).ToListAsync();
             return await users;
         }
 
