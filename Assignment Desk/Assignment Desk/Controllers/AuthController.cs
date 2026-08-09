@@ -16,12 +16,14 @@ public class AuthController : ControllerBase
     private readonly UserRepository _repository;
     private readonly UnitOfWork _unitOfWork;
     private readonly IJwtService _jwtService;
+    private readonly IAuthService _authService;
 
-    public AuthController(UserRepository repository, UnitOfWork unitOfWork, IJwtService jwtService)
+    public AuthController(UserRepository repository, UnitOfWork unitOfWork, IJwtService jwtService, IAuthService authService)
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
         _jwtService = jwtService;
+        _authService = authService;
     }
 
     [HttpPost("login")]
@@ -50,5 +52,22 @@ public class AuthController : ControllerBase
         {
             Token = token
         });
+    }
+
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+    {
+        await _authService.ForgotPassword(dto);
+        return Ok("If the email exists, a password reset link has been sent.");
+    }
+
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+    {
+        await _authService.ResetPassword(dto);
+
+        return Ok("Password reset successfully.");
     }
 }
