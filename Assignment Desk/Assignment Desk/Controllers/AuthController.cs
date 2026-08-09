@@ -24,37 +24,6 @@ public class AuthController : ControllerBase
         _jwtService = jwtService;
     }
 
-    [HttpPost("register")]
-    [Authorize(Roles ="Admin")]
-    public async Task<IActionResult> Register(AdminRegisterDto dto)
-    {
-        // Check email already exists
-        var user = await _repository.GetByEmailAsync(dto.Email);
-
-        if (user != null)
-        {
-            return BadRequest("Email already exists.");
-        }
-
-        string hashPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-
-        var newUser = new User
-        {
-            FullName = dto.FullName,
-            Email = dto.Email,
-            PasswordHash = hashPassword,
-            Role = UserRole.Admin,
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        await _repository.AddAsync(newUser);
-
-        await _unitOfWork.CommitAsync();
-
-        return Ok("User Registered Successfully.");
-    }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequestDto dto)
     {
