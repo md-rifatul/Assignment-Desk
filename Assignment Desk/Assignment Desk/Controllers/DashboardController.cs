@@ -28,5 +28,13 @@ namespace Assignment_Desk.Controllers
             int teacherId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             return Ok(await _dashboardService.GetTeacherDashboard(teacherId));
         }
+
+        [HttpGet("student")]
+        [Authorize(Roles ="Student")]
+        public async Task<IActionResult> StudentDashboard()
+        {
+            int studentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            return Ok(await _dashboardService.GetStudentDashboard(studentId));
+        }
     }
 }

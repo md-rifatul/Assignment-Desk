@@ -19,7 +19,8 @@ namespace AssignmentDesk.Application.Services
         private readonly IAssignmentRepository _assignmentRepository;
         private readonly ITeacherSubjectRepository _teacherSubjectRepository;
         private readonly ISubmissionRepository _submissionRepository;
-        public DashboardService(IUserRepository userRepository , IClassRepository classRepository, ISubjectRepository subjectRepository, IAssignmentRepository assignmentRepository, ITeacherSubjectRepository teacherSubjectRepository, ISubmissionRepository submissionRepository)
+        private readonly IStudentClassRepository _studentClassRepository;
+        public DashboardService(IUserRepository userRepository , IClassRepository classRepository, ISubjectRepository subjectRepository, IAssignmentRepository assignmentRepository, ITeacherSubjectRepository teacherSubjectRepository, ISubmissionRepository submissionRepository, IStudentClassRepository studentClassRepository)
         {
             _userRepository = userRepository;
             _classRepository = classRepository;
@@ -27,6 +28,7 @@ namespace AssignmentDesk.Application.Services
             _assignmentRepository = assignmentRepository;
             _teacherSubjectRepository = teacherSubjectRepository;
             _submissionRepository = submissionRepository;
+            _studentClassRepository = studentClassRepository;
         }
         public async Task<AdminDashboardDto> GetAdminDashboard()
         {
@@ -40,9 +42,23 @@ namespace AssignmentDesk.Application.Services
             };
         }
 
-        public Task<StudentDashboardDto> GetStudentDashboard()
+        public async Task<StudentDashboardDto> GetStudentDashboard(int studentId)
         {
-            throw new NotImplementedException();
+            var studentClass = await _studentClassRepository.GetByStudentIdAsync(studentId);
+
+            if (studentClass == null)
+                throw new Exception("Student is not assigned to any class.");
+
+            var classId = studentClass.ClassId;
+
+            return new StudentDashboardDto
+            {
+                MySubjects = await _subjectRepository.CountAsync(x => x.ClassId == classId),
+                MyAssignments = await _assignmentRepository.CountAsync(x => x.ClassId == classId),
+                SubmittedAssignments = await _submissionRepository.CountAsync(x=>x.StudentId == studentId),
+                PendingAssignments = await _assignmentRepository.CountPendingAssignmentsAsync(studentId, classId),
+                ReviewedAssignments = await _submissionRepository.CountAsync(x=>x.StudentId==studentId && x.Status==SubmissionStatus.Reviewed)
+            };
         }
 
         public async Task<TeacherDashboardDto> GetTeacherDashboard(int teacherId)

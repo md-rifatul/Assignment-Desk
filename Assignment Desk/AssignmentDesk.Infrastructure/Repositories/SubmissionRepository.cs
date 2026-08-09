@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +19,11 @@ namespace AssignmentDesk.Infrastructure.Repositories
         public SubmissionRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<int> CountAsync(Expression<Func<Submission, bool>> predicate)
+        {
+            return await _context.Submissions.CountAsync(predicate);
         }
 
         public async Task<IEnumerable<Submission>> GetAllAssignmentsByStudentId(int studentId)

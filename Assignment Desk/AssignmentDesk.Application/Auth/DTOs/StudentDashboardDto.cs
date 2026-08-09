@@ -10,6 +10,8 @@ namespace AssignmentDesk.Application.Auth.DTOs
     {
         public int MySubjects { get; set; }
         public int MyAssignments { get; set; }
-        public int SubmissionStatus { get; set; }
+        public int SubmittedAssignments { get; set; }
+        public int PendingAssignments { get; set; }
+        public int ReviewedAssignments { get; set; }
     }
 }

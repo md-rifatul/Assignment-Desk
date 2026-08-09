@@ -3,6 +3,7 @@ using AssignmentDesk.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace AssignmentDesk.Application.Interfaces.IRepository
         Task<IEnumerable<Submission>> GetSubmissionsByTeacherAsync(int teacherId);
         Task<Submission?> GetSubmissionWithAssignmentAsyncBySubmissionId(int submissionId);
         Task<int> GetPendingReviewCountAsync(int teacherId);
+        Task<int> CountAsync(Expression<Func<Submission, bool>> predicate);
 
     }
 }

@@ -11,6 +11,6 @@ namespace AssignmentDesk.Application.Interfaces.IServices
     {
         Task<AdminDashboardDto> GetAdminDashboard();
         Task<TeacherDashboardDto> GetTeacherDashboard(int teacherId);
-        Task<StudentDashboardDto> GetStudentDashboard();
+        Task<StudentDashboardDto> GetStudentDashboard(int studentId);
     }
 }

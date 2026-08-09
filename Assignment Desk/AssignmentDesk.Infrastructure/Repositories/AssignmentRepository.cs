@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,6 +48,21 @@ namespace AssignmentDesk.Infrastructure.Repositories
         public async Task<int> GetAssignmentCountByTeacherIdAsync(int teacherId)
         {
             return await _context.Assignments.CountAsync(x => x.TeacherId == teacherId && x.Status==AssignmentStatus.Publish);
+        }
+
+        public async Task<int> CountAsync(Expression<Func<Assignment, bool>> predicate)
+        {
+            return await _context.Assignments.CountAsync(predicate);
+        }
+
+        public async Task<int> CountPendingAssignmentsAsync(int studentId, int classId)
+        {
+            return await _context.Assignments
+                .Where(a => a.ClassId == classId && a.Status == AssignmentStatus.Publish)
+                .CountAsync(a => !_context.Submissions
+                    .Any(s =>
+                        s.AssignmentId == a.Id &&
+                        s.StudentId == studentId));
         }
     }
 }
