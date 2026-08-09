@@ -57,13 +57,24 @@ namespace AssignmentDesk.Infrastructure.Repositories.Auth
 
         public async Task<User?> GetByIdAsync(int id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
-            return user;
+            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<int> CountAsync(Expression<Func<User, bool>> predicate)
         {
             return await _context.Users.CountAsync(predicate);
+        }
+
+        public async Task<User?> GetUserByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x=>x.Email == email);
+        }
+
+        public async Task<User?> GetUserByResetTokenHashAsync(string tokenHash)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(x =>
+                    x.PasswordResetTokenHash == tokenHash);
         }
     }
 }

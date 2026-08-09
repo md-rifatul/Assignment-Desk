@@ -22,5 +22,8 @@ namespace AssignmentDesk.Domain.Entities
         public bool IsActive { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public string? PasswordResetTokenHash { get; set; }
+        public DateTime? PasswordResetTokenExpiry { get; set; }
     }
 }

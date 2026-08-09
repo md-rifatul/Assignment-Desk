@@ -18,6 +18,8 @@ namespace AssignmentDesk.Application.Interfaces.IAuth
         Task<IEnumerable<User>> GetUsers();
         Task<User?> GetByIdAsync(int id);
         Task<int> CountAsync(Expression<Func<User, bool>> predicate);
+        Task<User?> GetUserByEmail(string email);
+        Task<User?> GetUserByResetTokenHashAsync(string tokenHash);
 
     }
 }
