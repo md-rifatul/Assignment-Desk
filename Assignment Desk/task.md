@@ -1,0 +1,22 @@
+# Task List: Frontend Implementation
+
+- [x] Initialize Next.js project structure and configuration (`/frontend`)
+  - [x] Initialize Next.js App Router project
+  - [x] Configure `next.config.mjs` for API proxy rewrites (CORS bypass)
+  - [x] Add base dependencies in `package.json`
+  - [x] Set up `tsconfig.json` and base styles in `globals.css`
+- [x] Create core client-side modules
+  - [x] Define API contract DTO types in `src/types/index.ts`
+  - [x] Implement Fetch API wrapper in `src/lib/api.ts`
+  - [x] Create `AuthContext.tsx` and custom `useAuth` hook
+  - [x] Implement client-side role checking and route protection in page layouts
+- [x] Implement role-specific dashboards and features
+  - [x] Admin Dashboard (Feature 3)
+  - [x] Teacher Dashboard (Feature 4)
+- [x] Setup folder structure/placeholder pages for all roles
+  - [x] Guest routes (`/login`, `/activate-account`, `/forgot-password`, `/reset-password`)
+  - [x] Admin routes (`/admin/dashboard`, `/admin/users`, `/admin/classes`, `/admin/subjects`, `/admin/student-classes`, `/admin/teacher-subjects`)
+  - [x] Teacher routes (`/teacher/dashboard`, `/teacher/assignments`, `/teacher/submissions`)
+  - [x] Student routes (`/student/dashboard`, `/student/assignments`, `/student/submissions`)
+- [x] Verify execution
+  - [x] Start frontend application locally and verify loading
