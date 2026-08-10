@@ -28,9 +28,9 @@ namespace Assignment_Desk.Controllers
         }
         [HttpPost("delete/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult DeleteTeacherToSubject(int id)
+        public async Task<IActionResult> DeleteTeacherToSubject(int id)
         {
-            _teacherSubjectService.DeleteTeacher(id);
+             await _teacherSubjectService.DeleteTeacher(id);
             return Ok();
         }
 

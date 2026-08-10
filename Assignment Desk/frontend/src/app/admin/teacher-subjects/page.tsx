@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api";
-import { UserResponseDto, SubjectResponseDto, TeacherSubjectResponseDto, AssignTeacherSubjectDto } from "@/types";
+import { UserResponseDto, SubjectResponseDto, TeacherSubjectResponseDto, AssignTeacherSubjectDto, ClassResponseDto } from "@/types";
 
 interface DisplayAssignment {
   id: number; // Mapping ID from database
@@ -10,11 +10,13 @@ interface DisplayAssignment {
   teacherName: string;
   subjectId: number;
   subjectName: string;
+  className?: string;
 }
 
 export default function AdminTeacherSubjectsPage() {
   const [teachers, setTeachers] = useState<UserResponseDto[]>([]);
   const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
+  const [classes, setClasses] = useState<ClassResponseDto[]>([]);
   const [assignments, setAssignments] = useState<DisplayAssignment[]>([]);
   
   const [loading, setLoading] = useState(true);
@@ -31,15 +33,17 @@ export default function AdminTeacherSubjectsPage() {
     setLoading(true);
     setError(null);
     try {
-      // 1. Fetch teachers and subjects
-      const [allUsers, allSubjects] = await Promise.all([
+      // 1. Fetch teachers, subjects and classes
+      const [allUsers, allSubjects, allClasses] = await Promise.all([
         apiFetch<UserResponseDto[]>("/api/user/all"),
         apiFetch<SubjectResponseDto[]>("/api/subject/all"),
+        apiFetch<ClassResponseDto[]>("/api/class/all"),
       ]);
 
       const teacherUsers = allUsers.filter((u) => u.role === "Teacher");
       setTeachers(teacherUsers);
       setSubjects(allSubjects || []);
+      setClasses(allClasses || []);
 
       // 2. Fetch assignments for each teacher
       const aggregated: DisplayAssignment[] = [];
@@ -50,12 +54,18 @@ export default function AdminTeacherSubjectsPage() {
             const teacherSubs = await apiFetch<TeacherSubjectResponseDto[]>(`/api/teachersubject/get${t.id}`);
             if (teacherSubs && Array.isArray(teacherSubs)) {
               teacherSubs.forEach((sub) => {
+                const matchingSubject = allSubjects.find((s) => s.id === sub.subjectId);
+                const matchingClass = matchingSubject
+                  ? (allClasses || []).find((c) => c.id === matchingSubject.classId)
+                  : null;
+
                 aggregated.push({
                   id: sub.id,
                   teacherId: t.id,
                   teacherName: t.fullName,
                   subjectId: sub.subjectId,
                   subjectName: sub.subjectName,
+                  className: matchingClass ? matchingClass.name : undefined,
                 });
               });
             }
@@ -235,11 +245,14 @@ export default function AdminTeacherSubjectsPage() {
                 disabled={formLoading || loading}
               >
                 <option value={0}>-- Select a Subject --</option>
-                {subjects.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))}
+                {subjects.map((s) => {
+                  const matchingClass = classes.find((c) => c.id === s.classId);
+                  return (
+                    <option key={s.id} value={s.id}>
+                      {s.name} {matchingClass ? `(${matchingClass.name})` : ""}
+                    </option>
+                  );
+                })}
               </select>
               {subjects.length === 0 && !loading && (
                 <span className="error-message">No subjects found in database. Create them in Manage Subjects.</span>
@@ -290,7 +303,9 @@ export default function AdminTeacherSubjectsPage() {
                     assignments.map((item) => (
                       <tr key={item.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
                         <td style={{ padding: "12px 24px", fontWeight: "500" }}>{item.teacherName}</td>
-                        <td style={{ padding: "12px 24px", color: "var(--text-secondary)" }}>{item.subjectName}</td>
+                        <td style={{ padding: "12px 24px", color: "var(--text-secondary)" }}>
+                          {item.subjectName} {item.className ? `(${item.className})` : ""}
+                        </td>
                         <td style={{ padding: "12px 24px", textAlign: "right" }}>
                           <button className="btn" style={{ width: "auto", padding: "4px 8px", fontSize: "12px", background: "rgba(239, 68, 68, 0.1)", color: "var(--danger)" }} onClick={() => handleUnassign(item.id, item.teacherName, item.subjectName)}>
                             Unassign
