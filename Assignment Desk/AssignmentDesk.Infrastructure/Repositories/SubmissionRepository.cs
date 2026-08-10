@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Application.Interfaces.IRepository;
+using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Domain.Entities;
 using AssignmentDesk.Domain.Enums;
 using AssignmentDesk.Infrastructure.Data;
@@ -28,12 +28,20 @@ namespace AssignmentDesk.Infrastructure.Repositories
 
         public async Task<IEnumerable<Submission>> GetAllAssignmentsByStudentId(int studentId)
         {
-            return await _context.Submissions.Where(x=> x.StudentId == studentId).ToListAsync();
+            return await _context.Submissions
+                .Include(x => x.Student)
+                .Include(x => x.Assignment)
+                    .ThenInclude(x => x.Subject)
+                .Where(x => x.StudentId == studentId).ToListAsync();
         }
 
         public async Task<Submission?> GetByStudentAndAssignmentAsync(int studentId, int assignmentId)
         {
-            return await _context.Submissions.FirstOrDefaultAsync(x=>x.StudentId==studentId&&x.AssignmentId==assignmentId);
+            return await _context.Submissions
+                .Include(x => x.Student)
+                .Include(x => x.Assignment)
+                    .ThenInclude(x => x.Subject)
+                .FirstOrDefaultAsync(x=>x.StudentId==studentId&&x.AssignmentId==assignmentId);
         }
 
         public async Task<int> GetPendingReviewCountAsync(int teacherId)

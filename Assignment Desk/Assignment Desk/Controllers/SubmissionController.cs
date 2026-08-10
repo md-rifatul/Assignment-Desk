@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -49,6 +49,24 @@ namespace Assignment_Desk.Controllers
 
             await _submissionService.ReviewSubmission(submissionId,teacherId,dto);
             return Ok();
+        }
+
+        [HttpGet("my-submissions")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> GetMySubmissions()
+        {
+            int studentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var submissions = await _submissionService.GetAllSubmissions(studentId);
+            return Ok(submissions);
+        }
+
+        [HttpGet("get/{assignmentId}")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> GetSubmissionByAssignmentId(int assignmentId)
+        {
+            int studentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var submission = await _submissionService.GetSubmission(studentId, assignmentId);
+            return Ok(submission);
         }
 
     }
