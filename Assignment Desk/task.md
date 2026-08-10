@@ -17,6 +17,7 @@
   - [x] Manage Users CRUD (Feature 6)
   - [x] Manage Classes CRUD (Feature 7)
   - [x] Manage Subjects CRUD (Feature 8)
+  - [x] Assign Teacher to Subject Mapping (Feature 9)
 - [x] Setup folder structure/placeholder pages for all roles
   - [x] Guest routes (`/login`, `/activate-account`, `/forgot-password`, `/reset-password`)
   - [x] Admin routes (`/admin/dashboard`, `/admin/users`, `/admin/classes`, `/admin/subjects`, `/admin/student-classes`, `/admin/teacher-subjects`)
