@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -44,6 +44,13 @@ namespace Assignment_Desk.Controllers
         {
             await _studentClassService.UpdateStudentClass(id, dto);
             return Ok();
+        }
+
+        [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllStudentClasses()
+        {
+            return Ok(await _studentClassService.GetAllStudentClasses());
         }
     }
 }

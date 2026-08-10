@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,6 @@ namespace AssignmentDesk.Application.Interfaces.IServices
         Task DeleteStudentClass(int id);
         Task<StudentClassResponseDto> GetStudentClassById(int id);
         Task UpdateStudentClass(int id, CreateStudentClassDto dto);
-
+        Task<IEnumerable<StudentClassResponseDto>> GetAllStudentClasses();
     }
 }

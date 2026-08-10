@@ -110,6 +110,7 @@ export interface CreateSubjectDto {
 
 // Student Class Association DTOs
 export interface StudentClassResponseDto {
+  id: number;
   studentId: number;
   studentName: string;
   className: string;

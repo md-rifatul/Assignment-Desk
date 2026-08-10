@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Domain.Entities;
+using AssignmentDesk.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,8 @@ namespace AssignmentDesk.Application.Auth.DTOs
 {
     public class StudentClassResponseDto
     {
+        public int Id { get; set; }
+ 
         public int StudentId { get; set; }
 
         public string StudentName { get; set; }

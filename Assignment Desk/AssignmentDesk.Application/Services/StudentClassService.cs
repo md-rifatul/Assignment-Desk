@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Application.Interfaces.IUnitOfWork;
@@ -58,6 +58,12 @@ namespace AssignmentDesk.Application.Services
             if( student != null)
                 _mapper.Map(dto, student);
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<IEnumerable<StudentClassResponseDto>> GetAllStudentClasses()
+        {
+            var studentClasses = await _studentClassRepository.GetAllAsync(include: q => q.Include(c => c.Class).Include(c => c.Student));
+            return _mapper.Map<IEnumerable<StudentClassResponseDto>>(studentClasses);
         }
     }
 }
