@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Application.Interfaces.IServices;
+using AssignmentDesk.Application.Interfaces.IServices;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -95,20 +95,31 @@ namespace AssignmentDesk.Infrastructure.Services
                 HtmlBody = body
             }.ToMessageBody();
 
-            using var smtp = new SmtpClient();
+            try
+            {
+                using var smtp = new SmtpClient();
 
-            await smtp.ConnectAsync(
-                _settings.SmtpServer,
-                _settings.Port,
-                SecureSocketOptions.StartTls);
+                await smtp.ConnectAsync(
+                    _settings.SmtpServer,
+                    _settings.Port,
+                    SecureSocketOptions.StartTls);
 
-            await smtp.AuthenticateAsync(
-                _settings.Email,
-                _settings.Password);
+                await smtp.AuthenticateAsync(
+                    _settings.Email,
+                    _settings.Password);
 
-            await smtp.SendAsync(message);
+                await smtp.SendAsync(message);
 
-            await smtp.DisconnectAsync(true);
+                await smtp.DisconnectAsync(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("==================================================");
+                Console.WriteLine($"[SMTP FALLBACK] Failed to send activation email to {email}");
+                Console.WriteLine($"Activation Link: {activationLink}");
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("==================================================");
+            }
         }
 
 
@@ -185,22 +196,31 @@ namespace AssignmentDesk.Infrastructure.Services
                 HtmlBody = body
             }.ToMessageBody();
 
-            using var smtp = new SmtpClient();
+            try
+            {
+                using var smtp = new SmtpClient();
 
-            await smtp.ConnectAsync(
-                _settings.SmtpServer,
-                _settings.Port,
-                SecureSocketOptions.StartTls);
+                await smtp.ConnectAsync(
+                    _settings.SmtpServer,
+                    _settings.Port,
+                    SecureSocketOptions.StartTls);
 
-            await smtp.AuthenticateAsync(
-                 _settings.Email,
-                   _settings.Password);
+                await smtp.AuthenticateAsync(
+                     _settings.Email,
+                       _settings.Password);
 
+                await smtp.SendAsync(message);
 
-            await smtp.SendAsync(message);
-
-
-            await smtp.DisconnectAsync(true);
+                await smtp.DisconnectAsync(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("==================================================");
+                Console.WriteLine($"[SMTP FALLBACK] Failed to send password reset email to {email}");
+                Console.WriteLine($"Reset Link: {resetLink}");
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("==================================================");
+            }
         }
     }
 }

@@ -181,12 +181,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="auth-links">
+        <div className="auth-links" style={{ display: "flex", justifyContent: "center" }}>
           <Link href="/forgot-password" className="auth-link">
             Forgot Password?
-          </Link>
-          <Link href="/activate-account" className="auth-link">
-            Activate Account
           </Link>
         </div>
       </div>
