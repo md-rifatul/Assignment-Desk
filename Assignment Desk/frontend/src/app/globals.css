@@ -297,3 +297,88 @@ html, body {
 @media (min-width: 1024px) {
   .grid-4 { grid-template-columns: repeat(4, 1fr); }
 }
+
+/* Teacher & Admin Desk Premium Light Theme Override */
+.teacher-theme, .admin-theme {
+  --bg-app: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --border-color: #e2e8f0;
+  --border-focus: #4f46e5;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --primary: #4f46e5;
+  --primary-hover: #3730a3;
+  --primary-glow: rgba(79, 70, 229, 0.08);
+  --success-bg: rgba(16, 185, 129, 0.1);
+  --danger-bg: rgba(239, 68, 68, 0.1);
+  --warning-bg: rgba(245, 158, 11, 0.1);
+  background-color: var(--bg-app) !important;
+  color: var(--text-primary) !important;
+}
+
+.teacher-theme aside, .admin-theme aside {
+  background-color: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.01);
+}
+
+.teacher-theme aside a, .admin-theme aside a {
+  color: #475569 !important;
+  transition: all 0.2s ease;
+}
+
+.teacher-theme aside a.active-link, .admin-theme aside a.active-link {
+  background-color: #f1f5f9 !important;
+  color: #4f46e5 !important;
+  font-weight: 600 !important;
+}
+
+.teacher-theme aside a:hover:not(.active-link), .admin-theme aside a:hover:not(.active-link) {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+.teacher-theme table th, .admin-theme table th {
+  background-color: #f8fafc !important;
+  color: #475569 !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.teacher-theme table tr, .admin-theme table tr {
+  background-color: #ffffff !important;
+}
+
+.teacher-theme table tr:hover, .admin-theme table tr:hover {
+  background-color: #f8fafc !important;
+}
+
+.teacher-theme table td, .admin-theme table td {
+  border-bottom: 1px solid #f1f5f9 !important;
+  color: #475569;
+}
+
+.teacher-theme input, 
+.teacher-theme textarea, 
+.teacher-theme select,
+.admin-theme input,
+.admin-theme textarea,
+.admin-theme select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.teacher-theme input:focus, 
+.teacher-theme textarea:focus, 
+.teacher-theme select:focus,
+.admin-theme input:focus,
+.admin-theme textarea:focus,
+.admin-theme select:focus {
+  border-color: #4f46e5 !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15) !important;
+}
+

@@ -184,13 +184,14 @@ export default function AdminUsersPage() {
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Full Name</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Email</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Role</th>
+                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Status</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600", textAlign: "right" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {users.length === 0 ? (
                   <tr>
-                    <td colSpan={4} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)" }}>
+                    <td colSpan={5} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)" }}>
                       No users registered yet.
                     </td>
                   </tr>
@@ -212,6 +213,21 @@ export default function AdminUsersPage() {
                           border: user.role === "Admin" ? "1px solid rgba(99,102,241,0.2)" : user.role === "Teacher" ? "1px solid rgba(245,158,11,0.2)" : "1px solid rgba(16,185,129,0.2)"
                         }}>
                           {user.role}
+                        </span>
+                      </td>
+                      <td style={{ padding: "16px 24px" }}>
+                        <span style={{
+                          display: "inline-block",
+                          padding: "4px 10px",
+                          borderRadius: "var(--radius-full)",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          textTransform: "uppercase",
+                          color: user.isActive ? "var(--success)" : "var(--danger)",
+                          background: user.isActive ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                          border: user.isActive ? "1px solid rgba(16,185,129,0.2)" : "1px solid rgba(239,68,68,0.2)"
+                        }}>
+                          {user.isActive ? "Active" : "Inactive"}
                         </span>
                       </td>
                       <td style={{ padding: "16px 24px", textAlign: "right" }}>
@@ -257,6 +273,24 @@ export default function AdminUsersPage() {
               <div>
                 <label style={{ fontSize: "12px", color: "var(--text-muted)", textTransform: "uppercase" }}>System Role</label>
                 <p style={{ fontSize: "15px", fontWeight: "500", marginTop: "4px" }}>{selectedUser.role}</p>
+              </div>
+              <div>
+                <label style={{ fontSize: "12px", color: "var(--text-muted)", textTransform: "uppercase" }}>Status</label>
+                <p style={{ fontSize: "15px", fontWeight: "500", marginTop: "4px" }}>
+                  <span style={{
+                    display: "inline-block",
+                    padding: "2px 8px",
+                    borderRadius: "var(--radius-full)",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    textTransform: "uppercase",
+                    color: selectedUser.isActive ? "var(--success)" : "var(--danger)",
+                    background: selectedUser.isActive ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                    border: selectedUser.isActive ? "1px solid rgba(16,185,129,0.2)" : "1px solid rgba(239,68,68,0.2)"
+                  }}>
+                    {selectedUser.isActive ? "Active" : "Inactive"}
+                  </span>
+                </p>
               </div>
             </div>
             <button className="btn btn-primary" onClick={() => setIsViewOpen(false)}>

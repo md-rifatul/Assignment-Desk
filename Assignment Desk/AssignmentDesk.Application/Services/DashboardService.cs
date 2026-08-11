@@ -1,8 +1,10 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IAuth;
 using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,17 @@ namespace AssignmentDesk.Application.Services
         private readonly ITeacherSubjectRepository _teacherSubjectRepository;
         private readonly ISubmissionRepository _submissionRepository;
         private readonly IStudentClassRepository _studentClassRepository;
-        public DashboardService(IUserRepository userRepository , IClassRepository classRepository, ISubjectRepository subjectRepository, IAssignmentRepository assignmentRepository, ITeacherSubjectRepository teacherSubjectRepository, ISubmissionRepository submissionRepository, IStudentClassRepository studentClassRepository)
+        private readonly IMapper _mapper;
+
+        public DashboardService(
+            IUserRepository userRepository, 
+            IClassRepository classRepository, 
+            ISubjectRepository subjectRepository, 
+            IAssignmentRepository assignmentRepository, 
+            ITeacherSubjectRepository teacherSubjectRepository, 
+            ISubmissionRepository submissionRepository, 
+            IStudentClassRepository studentClassRepository,
+            IMapper mapper)
         {
             _userRepository = userRepository;
             _classRepository = classRepository;
@@ -29,16 +41,36 @@ namespace AssignmentDesk.Application.Services
             _teacherSubjectRepository = teacherSubjectRepository;
             _submissionRepository = submissionRepository;
             _studentClassRepository = studentClassRepository;
+            _mapper = mapper;
         }
+
         public async Task<AdminDashboardDto> GetAdminDashboard()
         {
+            var assignments = await _assignmentRepository.GetAllAsync(
+                include: q => q.Include(a => a.Subject).Include(a => a.Class)
+            );
+
+            var submissions = await _submissionRepository.GetAllAsync(
+                include: q => q.Include(s => s.Student)
+                               .Include(s => s.Assignment)
+                                   .ThenInclude(a => a.Subject)
+                               .Include(s => s.Assignment)
+                                   .ThenInclude(a => a.Class)
+            );
+
             return new AdminDashboardDto
             {
                 TotalTeachers = await _userRepository.CountAsync(x => x.Role == UserRole.Teacher),
                 TotalStudents = await _userRepository.CountAsync(x => x.Role == UserRole.Student),
                 TotalClasses = await _classRepository.CountAsync(),
                 TotalSubjects = await _subjectRepository.CountAsync(),
-                TotalAssignments = await _assignmentRepository.CountAsync()
+                TotalAssignments = await _assignmentRepository.CountAsync(),
+                RecentAssignments = _mapper.Map<IEnumerable<AssignmentResponseDto>>(
+                    assignments.OrderByDescending(a => a.CreatedAt)
+                ),
+                RecentSubmissions = _mapper.Map<IEnumerable<SubmissionResponseDto>>(
+                    submissions.OrderByDescending(s => s.SubmittedAt)
+                )
             };
         }
 

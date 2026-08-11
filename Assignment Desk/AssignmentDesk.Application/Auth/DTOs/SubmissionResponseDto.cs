@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Domain.Enums;
+using AssignmentDesk.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,7 @@ namespace AssignmentDesk.Application.Auth.DTOs
         public string AssignmentTitle { get; set; }
 
         public string SubjectName { get; set; }
+        public string ClassName { get; set; }
 
         public string FileUrl { get; set; }
 

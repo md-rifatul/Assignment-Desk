@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Domain.Entities;
 using AutoMapper;
 using System;
@@ -33,7 +33,9 @@ namespace AssignmentDesk.Application.Mapping
                     o => o.MapFrom(s => s.Assignment.Title))
 
                 .ForMember(d => d.SubjectName,
-                    o => o.MapFrom(s => s.Assignment.Subject.Name));
+                    o => o.MapFrom(s => s.Assignment.Subject.Name))
+                .ForMember(d => d.ClassName,
+                    o => o.MapFrom(s => s.Assignment.Class.Name));
         }
     }
 }

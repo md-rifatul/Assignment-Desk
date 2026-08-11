@@ -57,6 +57,8 @@ namespace AssignmentDesk.Infrastructure.Repositories
                 .Include(x => x.Student)
                 .Include(x => x.Assignment)
                 .ThenInclude(x=>x.Subject)
+                .Include(x => x.Assignment)
+                .ThenInclude(x => x.Class)
                 .Where(x => x.Assignment.TeacherId == teacherId).ToListAsync();
         }
 

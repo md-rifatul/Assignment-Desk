@@ -79,9 +79,6 @@ export default function TeacherSubmissionsPage() {
       errors.marks = `Marks cannot exceed the maximum marks of ${maxMarks}.`;
     }
 
-    if (!formData.feedback.trim()) {
-      errors.feedback = "Feedback is required.";
-    }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -119,7 +116,7 @@ export default function TeacherSubmissionsPage() {
   return (
     <div>
       <div style={{ marginBottom: "32px" }}>
-        <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", background: "linear-gradient(to right, #ffffff, #94a3b8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+        <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", color: "#0f172a" }}>
           Grading & Submissions
         </h1>
         <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>Evaluate student solutions, check uploaded PDF work, and assign grades</p>

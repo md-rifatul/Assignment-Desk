@@ -1,7 +1,8 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IAuth;
 using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Application.Services;
+using AutoMapper;
 using AssignmentDesk.Domain.Entities;
 using AssignmentDesk.Domain.Enums;
 using FluentAssertions;
@@ -21,6 +22,7 @@ namespace AssignmentDesk.Tests.Services
         private Mock<ITeacherSubjectRepository> _teacherSubjectRepositoryMock = null!;
         private Mock<ISubmissionRepository> _submissionRepositoryMock = null!;
         private Mock<IStudentClassRepository> _studentClassRepositoryMock = null!;
+        private Mock<IMapper> _mapperMock = null!;
 
         private DashboardService _dashboardService = null!;
 
@@ -34,6 +36,7 @@ namespace AssignmentDesk.Tests.Services
             _teacherSubjectRepositoryMock = new Mock<ITeacherSubjectRepository>();
             _submissionRepositoryMock = new Mock<ISubmissionRepository>();
             _studentClassRepositoryMock = new Mock<IStudentClassRepository>();
+            _mapperMock = new Mock<IMapper>();
 
             _dashboardService = new DashboardService(
                 _userRepositoryMock.Object,
@@ -42,7 +45,8 @@ namespace AssignmentDesk.Tests.Services
                 _assignmentRepositoryMock.Object,
                 _teacherSubjectRepositoryMock.Object,
                 _submissionRepositoryMock.Object,
-                _studentClassRepositoryMock.Object
+                _studentClassRepositoryMock.Object,
+                _mapperMock.Object
             );
         }
 
@@ -65,6 +69,20 @@ namespace AssignmentDesk.Tests.Services
             _assignmentRepositoryMock
                 .Setup(x => x.CountAsync())
                 .ReturnsAsync(12);
+
+            _assignmentRepositoryMock
+                .Setup(x => x.GetAllAsync(
+                    It.IsAny<Expression<Func<Assignment, bool>>>(),
+                    It.IsAny<Func<IQueryable<Assignment>, IQueryable<Assignment>>>(),
+                    It.IsAny<bool>()))
+                .ReturnsAsync(new List<Assignment>());
+
+            _submissionRepositoryMock
+                .Setup(x => x.GetAllAsync(
+                    It.IsAny<Expression<Func<Submission, bool>>>(),
+                    It.IsAny<Func<IQueryable<Submission>, IQueryable<Submission>>>(),
+                    It.IsAny<bool>()))
+                .ReturnsAsync(new List<Submission>());
 
             var result =
                 await _dashboardService.GetAdminDashboard();

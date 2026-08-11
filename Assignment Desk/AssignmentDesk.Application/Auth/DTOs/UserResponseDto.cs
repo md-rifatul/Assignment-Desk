@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Domain.Enums;
+using AssignmentDesk.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +15,6 @@ namespace AssignmentDesk.Application.Auth.DTOs
         public string Email { get; set; }
 
         public string Role { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -53,6 +53,8 @@ export interface AdminDashboardDto {
   totalClasses: number;
   totalSubjects: number;
   totalAssignments: number;
+  recentAssignments: AssignmentResponseDto[];
+  recentSubmissions: SubmissionResponseDto[];
 }
 
 export interface TeacherDashboardDto {
@@ -75,6 +77,7 @@ export interface UserResponseDto {
   fullName: string;
   email: string;
   role: string; // "Admin" | "Teacher" | "Student"
+  isActive: boolean;
 }
 
 // Register (Create User) payload
@@ -164,6 +167,7 @@ export interface SubmissionResponseDto {
   assignmentId: number;
   assignmentTitle: string;
   subjectName: string;
+  className?: string;
   fileUrl: string;
   submittedAt: string; // ISO date-time string
   status: SubmissionStatus;
