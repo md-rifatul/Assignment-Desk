@@ -21,8 +21,19 @@ namespace Assignment_Desk.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> AddStudentIntoTheClass([FromBody] CreateStudentClassDto dto)
         {
-            await _studentClassService.AddStudentClass(dto);
-            return Ok(dto);
+            try
+            {
+                await _studentClassService.AddStudentClass(dto);
+                return Ok(dto);
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (System.Exception)
+            {
+                return StatusCode(500, new { message = "An error occurred while assigning the student." });
+            }
         }
         [HttpGet("get/{id}")]
         [Authorize(Roles = "Admin")]
@@ -42,8 +53,19 @@ namespace Assignment_Desk.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateStudentFromClass(int id, [FromBody] CreateStudentClassDto dto)
         {
-            await _studentClassService.UpdateStudentClass(id, dto);
-            return Ok();
+            try
+            {
+                await _studentClassService.UpdateStudentClass(id, dto);
+                return Ok();
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (System.Exception)
+            {
+                return StatusCode(500, new { message = "An error occurred while updating student class assignment." });
+            }
         }
 
         [HttpGet("all")]
