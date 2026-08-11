@@ -318,6 +318,25 @@ html, body {
   color: var(--text-primary) !important;
 }
 
+.teacher-theme .alert, .admin-theme .alert, .student-theme .alert {
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+}
+
+.teacher-theme .alert-success, .admin-theme .alert-success, .student-theme .alert-success {
+  color: #065f46 !important;
+  background-color: #ecfdf5 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+
+.teacher-theme .alert-danger, .admin-theme .alert-danger, .student-theme .alert-danger {
+  color: #991b1b !important;
+  background-color: #fef2f2 !important;
+  border: 1px solid #fca5a5 !important;
+}
+
 .teacher-theme aside, .admin-theme aside, .student-theme aside {
   background-color: #ffffff !important;
   border-right: 1px solid #e2e8f0 !important;
