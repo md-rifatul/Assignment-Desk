@@ -565,11 +565,6 @@ export default function StudentDashboardPage() {
           </div>
         </div>
       )}
-
-      {/* Footer Text */}
-      <footer style={{ marginTop: "16px", textAlign: "center", fontSize: "12px", color: "var(--text-muted)" }}>
-        &copy; 2026 Student Desk. All rights reserved.
-      </footer>
     </div>
   );
 }

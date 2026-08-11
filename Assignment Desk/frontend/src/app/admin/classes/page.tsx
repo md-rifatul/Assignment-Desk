@@ -13,6 +13,8 @@ export default function AdminClassesPage() {
   // Modals state
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState<ClassResponseDto | null>(null);
+  const [descriptionModalText, setDescriptionModalText] = useState<string | null>(null);
+  const [descriptionModalClassName, setDescriptionModalClassName] = useState<string>("");
   const [formData, setFormData] = useState<CreateClassDto>({
     name: "",
     description: "",
@@ -163,27 +165,41 @@ export default function AdminClassesPage() {
             <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
               <thead>
                 <tr style={{ background: "rgba(15, 23, 42, 0.4)", borderBottom: "1px solid var(--border-color)" }}>
-                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600", width: "120px" }}>Class ID</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Class Name</th>
-                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Description</th>
-                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600", textAlign: "right", width: "180px" }}>Actions</th>
+                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600", textAlign: "right", width: "240px" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {classes.length === 0 ? (
                   <tr>
-                    <td colSpan={4} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)" }}>
+                    <td colSpan={2} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)" }}>
                       No classes registered yet.
                     </td>
                   </tr>
                 ) : (
                   classes.map((cls) => (
                     <tr key={cls.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
-                      <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>{cls.id}</td>
                       <td style={{ padding: "16px 24px", fontWeight: "500" }}>{cls.name}</td>
-                      <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>{cls.description || <span style={{ color: "var(--text-muted)", fontStyle: "italic" }}>No description</span>}</td>
                       <td style={{ padding: "16px 24px", textAlign: "right" }}>
                         <div style={{ display: "inline-flex", gap: "8px" }}>
+                          <button
+                            type="button"
+                            className="btn"
+                            style={{
+                              width: "auto",
+                              padding: "6px 12px",
+                              fontSize: "12px",
+                              background: "rgba(255, 255, 255, 0.05)",
+                              color: "var(--text-primary)",
+                              border: "1px solid var(--border-color)"
+                            }}
+                            onClick={() => {
+                              setDescriptionModalText(cls.description || "");
+                              setDescriptionModalClassName(cls.name);
+                            }}
+                          >
+                            View
+                          </button>
                           <button className="btn" style={{ width: "auto", padding: "6px 12px", fontSize: "12px", background: "rgba(99, 102, 241, 0.1)", color: "var(--primary)" }} onClick={() => handleOpenEdit(cls)}>
                             Edit
                           </button>
@@ -256,6 +272,33 @@ export default function AdminClassesPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Description Viewer Modal */}
+      {descriptionModalText !== null && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15,23,42,0.8)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000 }}>
+          <div className="auth-card" style={{ maxWidth: "480px", padding: "24px" }}>
+            <h2 style={{ fontSize: "20px", fontWeight: "700", marginBottom: "16px" }}>
+              Class Description - {descriptionModalClassName}
+            </h2>
+            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", padding: "16px", marginBottom: "24px", minHeight: "80px", maxHeight: "240px", overflowY: "auto", fontSize: "14px", color: "var(--text-secondary)" }}>
+              {descriptionModalText || <span style={{ fontStyle: "italic", color: "var(--text-muted)" }}>No description provided.</span>}
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <button 
+                type="button" 
+                className="btn btn-primary" 
+                style={{ width: "100px", padding: "10px", fontSize: "14px" }} 
+                onClick={() => {
+                  setDescriptionModalText(null);
+                  setDescriptionModalClassName("");
+                }}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

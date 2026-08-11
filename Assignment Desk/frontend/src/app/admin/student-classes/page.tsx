@@ -142,10 +142,7 @@ export default function AdminStudentClassesPage() {
 
   // Filtered assignments
   const filteredAssignments = assignments.filter((a) => {
-    const matchesSearch =
-      a.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      a.studentId.toString().includes(searchQuery);
-    
+    const matchesSearch = a.studentName.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesClass = selectedClassFilter === "" || a.className === selectedClassFilter;
     
     return matchesSearch && matchesClass;
@@ -190,7 +187,7 @@ export default function AdminStudentClassesPage() {
         <input
           type="text"
           className="form-control"
-          placeholder="Search by student name or ID..."
+          placeholder="Search by student name..."
           style={{ flex: 2, minWidth: "240px" }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -218,7 +215,6 @@ export default function AdminStudentClassesPage() {
             <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
               <thead>
                 <tr style={{ background: "rgba(15, 23, 42, 0.4)", borderBottom: "1px solid var(--border-color)" }}>
-                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600", width: "120px" }}>Student ID</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Student Name</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Class Name</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600", textAlign: "right", width: "180px" }}>Actions</th>
@@ -227,14 +223,13 @@ export default function AdminStudentClassesPage() {
               <tbody>
                 {filteredAssignments.length === 0 ? (
                   <tr>
-                    <td colSpan={4} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)" }}>
+                    <td colSpan={3} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)" }}>
                       No student-class assignments found.
                     </td>
                   </tr>
                 ) : (
                   filteredAssignments.map((item) => (
                     <tr key={item.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
-                      <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>{item.studentId}</td>
                       <td style={{ padding: "16px 24px", fontWeight: "500" }}>{item.studentName}</td>
                       <td style={{ padding: "16px 24px", color: "var(--success)" }}>{item.className}</td>
                       <td style={{ padding: "16px 24px", textAlign: "right" }}>

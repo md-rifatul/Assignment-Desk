@@ -27,6 +27,7 @@ export default function AdminTeacherSubjectsPage() {
   const [selectedTeacherId, setSelectedTeacherId] = useState<number>(0);
   const [selectedClassId, setSelectedClassId] = useState<number>(0);
   const [selectedSubjectId, setSelectedSubjectId] = useState<number>(0);
+  const [selectedFilterTeacherId, setSelectedFilterTeacherId] = useState<number>(0);
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -171,6 +172,12 @@ export default function AdminTeacherSubjectsPage() {
     }
   };
 
+  // Filtered assignments based on teacher filter
+  const filteredAssignments = assignments.filter((a) => {
+    if (selectedFilterTeacherId === 0) return true;
+    return a.teacherId === selectedFilterTeacherId;
+  });
+
   return (
     <div>
       <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", color: "#0f172a" }}>
@@ -307,8 +314,33 @@ export default function AdminTeacherSubjectsPage() {
 
         {/* Existing Allocations List */}
         <div className="auth-card" style={{ maxWidth: "none", padding: "0", overflow: "hidden", border: "1px solid var(--border-color)" }}>
-          <div style={{ padding: "20px 24px", background: "rgba(15, 23, 42, 0.4)", borderBottom: "1px solid var(--border-color)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", background: "rgba(15, 23, 42, 0.4)", borderBottom: "1px solid var(--border-color)", flexWrap: "wrap", gap: "12px" }}>
             <h2 style={{ fontSize: "16px", fontWeight: "600" }}>Active Assignments</h2>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <label htmlFor="filterTeacherSelect" style={{ fontSize: "14px", fontWeight: "600", color: "var(--text-secondary)" }}>
+                Filter by Teacher:
+              </label>
+              <select
+                id="filterTeacherSelect"
+                className="form-control"
+                style={{ 
+                  width: "200px", 
+                  background: "rgba(15, 23, 42, 0.95)", 
+                  padding: "6px 12px",
+                  fontSize: "14px",
+                  margin: 0
+                }}
+                value={selectedFilterTeacherId}
+                onChange={(e) => setSelectedFilterTeacherId(parseInt(e.target.value))}
+              >
+                <option value={0}>All Teachers</option>
+                {teachers.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.fullName}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           
           {loading ? (
@@ -327,14 +359,14 @@ export default function AdminTeacherSubjectsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {assignments.length === 0 ? (
+                  {filteredAssignments.length === 0 ? (
                     <tr>
                       <td colSpan={4} style={{ padding: "32px 24px", textAlign: "center", color: "var(--text-muted)", fontStyle: "italic" }}>
                         No teacher-subject allocations recorded yet.
                       </td>
                     </tr>
                   ) : (
-                    assignments.map((item) => (
+                    filteredAssignments.map((item) => (
                       <tr key={item.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
                         <td style={{ padding: "12px 24px", fontWeight: "500" }}>{item.teacherName}</td>
                         <td style={{ padding: "12px 24px", color: "var(--text-secondary)" }}>

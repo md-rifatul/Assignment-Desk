@@ -32,6 +32,23 @@ export default function AdminSubjectsPage() {
     return map;
   }, [classes]);
 
+  // Group subjects by class name
+  const groupedClasses = React.useMemo(() => {
+    if (classes.length === 0) return [];
+    
+    // Sort classes by name so they appear in order
+    const sortedClasses = [...classes].sort((a, b) => a.name.localeCompare(b.name));
+    
+    return sortedClasses.map((cls) => {
+      const classSubjects = subjects.filter((sub) => sub.classId === cls.id);
+      return {
+        classId: cls.id,
+        className: cls.name,
+        subjects: classSubjects,
+      };
+    });
+  }, [classes, subjects]);
+
   // Fetch subjects and classes
   const fetchData = async () => {
     setLoading(true);
@@ -187,46 +204,57 @@ export default function AdminSubjectsPage() {
           <div className="btn-spinner" style={{ width: "48px", height: "48px", borderTopColor: "var(--primary)" }}></div>
         </div>
       ) : (
-        <div className="auth-card" style={{ maxWidth: "none", padding: "0", overflow: "hidden", border: "1px solid var(--border-color)" }}>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
-              <thead>
-                <tr style={{ background: "rgba(15, 23, 42, 0.4)", borderBottom: "1px solid var(--border-color)" }}>
-                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600", width: "120px" }}>Subject ID</th>
-                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Subject Name</th>
-                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Class Name</th>
-                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600", textAlign: "right", width: "180px" }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {subjects.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)" }}>
-                      No subjects registered yet.
-                    </td>
-                  </tr>
-                ) : (
-                  subjects.map((sub) => (
-                    <tr key={sub.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
-                      <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>{sub.id}</td>
-                      <td style={{ padding: "16px 24px", fontWeight: "500" }}>{sub.name}</td>
-                      <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>{classMap[sub.classId] || `Class ID: ${sub.classId}`}</td>
-                      <td style={{ padding: "16px 24px", textAlign: "right" }}>
-                        <div style={{ display: "inline-flex", gap: "8px" }}>
-                          <button className="btn" style={{ width: "auto", padding: "6px 12px", fontSize: "12px", background: "rgba(99, 102, 241, 0.1)", color: "var(--primary)" }} onClick={() => handleOpenEdit(sub)}>
-                            Edit
-                          </button>
-                          <button className="btn" style={{ width: "auto", padding: "6px 12px", fontSize: "12px", background: "rgba(239, 68, 68, 0.1)", color: "var(--danger)" }} onClick={() => handleDelete(sub.id, sub.name)}>
-                            Delete
-                          </button>
-                        </div>
-                      </td>
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+          {groupedClasses.map((group) => (
+            <div key={group.classId} className="auth-card" style={{ maxWidth: "none", padding: "24px", overflow: "hidden", border: "1px solid var(--border-color)", boxShadow: "none" }}>
+              <div style={{ paddingBottom: "12px", borderBottom: "1px solid var(--border-color)", marginBottom: "16px" }}>
+                <h3 style={{ fontSize: "16px", fontWeight: "700", color: "var(--primary)" }}>
+                  {group.className}
+                </h3>
+              </div>
+              
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
+                  <thead>
+                    <tr style={{ background: "rgba(15, 23, 42, 0.02)", borderBottom: "1px solid var(--border-color)" }}>
+                      <th style={{ padding: "12px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Subject Name</th>
+                      <th style={{ padding: "12px 24px", color: "var(--text-secondary)", fontWeight: "600", textAlign: "right", width: "180px" }}>Actions</th>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  </thead>
+                  <tbody>
+                    {group.subjects.length === 0 ? (
+                      <tr>
+                        <td colSpan={2} style={{ padding: "24px 24px", textAlign: "center", color: "var(--text-muted)", fontStyle: "italic" }}>
+                          No subjects registered in this class.
+                        </td>
+                      </tr>
+                    ) : (
+                      group.subjects.map((sub) => (
+                        <tr key={sub.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
+                          <td style={{ padding: "12px 24px", fontWeight: "500" }}>{sub.name}</td>
+                          <td style={{ padding: "12px 24px", textAlign: "right" }}>
+                            <div style={{ display: "inline-flex", gap: "8px" }}>
+                              <button className="btn" style={{ width: "auto", padding: "6px 12px", fontSize: "12px", background: "rgba(99, 102, 241, 0.1)", color: "var(--primary)" }} onClick={() => handleOpenEdit(sub)}>
+                                Edit
+                              </button>
+                              <button className="btn" style={{ width: "auto", padding: "6px 12px", fontSize: "12px", background: "rgba(239, 68, 68, 0.1)", color: "var(--danger)" }} onClick={() => handleDelete(sub.id, sub.name)}>
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
+          {classes.length > 0 && subjects.length === 0 && (
+            <div className="auth-card" style={{ maxWidth: "none", padding: "40px 24px", textAlign: "center", color: "var(--text-muted)", border: "1px solid var(--border-color)" }}>
+              No subjects registered yet. Create them by clicking &quot;+ Create Subject&quot;.
+            </div>
+          )}
         </div>
       )}
 
