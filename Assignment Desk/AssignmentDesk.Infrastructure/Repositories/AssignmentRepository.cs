@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Application.Interfaces.IRepository;
+using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Domain.Entities;
 using AssignmentDesk.Domain.Enums;
 using AssignmentDesk.Infrastructure.Data;
@@ -31,6 +31,7 @@ namespace AssignmentDesk.Infrastructure.Repositories
             return await _context.Assignments
                     .Include(x => x.Subject)
                     .Include(x => x.Teacher)
+                    .Include(x => x.Class)
                     .Where(x => x.TeacherId == teacherId)
                     .ToListAsync();
         }

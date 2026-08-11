@@ -123,7 +123,7 @@ export default function AdminClassesPage() {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
         <div>
-          <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", background: "linear-gradient(to right, #ffffff, #94a3b8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", color: "#0f172a" }}>
             Manage Classes
           </h1>
           <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>CRUD administration for academic classes</p>

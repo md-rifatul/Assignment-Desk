@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api";
-import { AdminDashboardDto, SubmissionResponseDto, SubmissionStatus } from "@/types";
+import { AdminDashboardDto, AssignmentResponseDto, SubmissionResponseDto, SubmissionStatus } from "@/types";
 import Link from "next/link";
 
 export default function AdminDashboardPage() {
@@ -14,6 +14,7 @@ export default function AdminDashboardPage() {
   const [isAssignmentsModalOpen, setIsAssignmentsModalOpen] = useState(false);
   const [isSubmissionsModalOpen, setIsSubmissionsModalOpen] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState<SubmissionResponseDto | null>(null);
+  const [selectedAssignment, setSelectedAssignment] = useState<AssignmentResponseDto | null>(null);
 
   // Date formatting state
   const [currentDateStr, setCurrentDateStr] = useState("");
@@ -497,7 +498,7 @@ export default function AdminDashboardPage() {
       {/* All Assignments Modal */}
       {isAssignmentsModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 9999, padding: "20px" }}>
-          <div style={{ maxWidth: "800px", width: "100%", padding: "24px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", maxHeight: "80vh", display: "flex", flexDirection: "column", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}>
+          <div style={{ maxWidth: "950px", width: "100%", padding: "24px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", maxHeight: "80vh", display: "flex", flexDirection: "column", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#0f172a", margin: 0 }}>All Assignments</h3>
               <button onClick={() => setIsAssignmentsModalOpen(false)} style={{ background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "24px", fontWeight: "300" }}>&times;</button>
@@ -507,23 +508,52 @@ export default function AdminDashboardPage() {
                 <thead>
                   <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
                     <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600" }}>Title</th>
+                    <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600" }}>Teacher</th>
                     <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600" }}>Subject</th>
+                    <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600" }}>Class</th>
                     <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600" }}>Max Marks</th>
                     <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600" }}>Deadline</th>
                     <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600" }}>Status</th>
+                    <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600", textAlign: "right" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {allAssignments.map((assignment) => (
                     <tr key={assignment.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
                       <td style={{ padding: "12px 16px", fontWeight: "700", color: "#0f172a" }}>{assignment.title}</td>
+                      <td style={{ padding: "12px 16px", color: "var(--text-secondary)" }}>{assignment.teacherName || "Teacher"}</td>
                       <td style={{ padding: "12px 16px", color: "var(--text-secondary)" }}>{assignment.subjectName}</td>
+                      <td style={{ padding: "12px 16px", color: "var(--text-secondary)" }}>{assignment.className || "Class 1"}</td>
                       <td style={{ padding: "12px 16px", fontWeight: "600", color: "#0f172a" }}>{assignment.maximumMarks}</td>
                       <td style={{ padding: "12px 16px", color: "var(--text-secondary)" }}>{new Date(assignment.deadline).toLocaleDateString()}</td>
                       <td style={{ padding: "12px 16px" }}>
                         <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: "12px", fontSize: "11px", fontWeight: "600", color: "var(--success)", background: "rgba(16,185,129,0.08)" }}>
                           PUBLISHED
                         </span>
+                      </td>
+                      <td style={{ padding: "12px 16px", textAlign: "right" }}>
+                        <button 
+                          onClick={() => {
+                            setIsAssignmentsModalOpen(false);
+                            setSelectedAssignment(assignment);
+                          }}
+                          className="btn" 
+                          style={{
+                            width: "auto",
+                            padding: "6px 10px",
+                            background: "transparent",
+                            color: "var(--text-secondary)",
+                            border: "1px solid var(--border-color)",
+                            borderRadius: "8px",
+                            display: "inline-flex",
+                            alignItems: "center"
+                          }}
+                        >
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -693,6 +723,61 @@ export default function AdminDashboardPage() {
                 onClick={() => setSelectedSubmission(null)}
                 className="btn" 
                 style={{ width: "100px", padding: "12px", background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border-color)", fontSize: "14px", fontWeight: "600" }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Assignment Info Modal */}
+      {selectedAssignment && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 10000, padding: "20px" }}>
+          <div style={{ maxWidth: "550px", width: "100%", padding: "28px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#0f172a", margin: 0 }}>Assignment Info</h3>
+              <button onClick={() => setSelectedAssignment(null)} style={{ background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "24px", fontWeight: "300" }}>&times;</button>
+            </div>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+                <span style={{ color: "var(--text-secondary)", fontWeight: "500" }}>Assignment Title</span>
+                <span style={{ fontWeight: "700", color: "#0f172a" }}>{selectedAssignment.title}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+                <span style={{ color: "var(--text-secondary)", fontWeight: "500" }}>Assigned Teacher</span>
+                <span style={{ fontWeight: "700", color: "#0f172a" }}>{selectedAssignment.teacherName || "Teacher"}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+                <span style={{ color: "var(--text-secondary)", fontWeight: "500" }}>Class Name</span>
+                <span style={{ fontWeight: "700", color: "#0f172a" }}>{selectedAssignment.className || "Class 1"}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+                <span style={{ color: "var(--text-secondary)", fontWeight: "500" }}>Subject</span>
+                <span style={{ fontWeight: "700", color: "#0f172a" }}>{selectedAssignment.subjectName}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+                <span style={{ color: "var(--text-secondary)", fontWeight: "500" }}>Deadline Date</span>
+                <span style={{ fontWeight: "600", color: "#0f172a" }}>{new Date(selectedAssignment.deadline).toLocaleString()}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+                <span style={{ color: "var(--text-secondary)", fontWeight: "500" }}>Question Marks (Max Marks)</span>
+                <span style={{ fontWeight: "700", color: "#0f172a" }}>{selectedAssignment.maximumMarks} Marks</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                <span style={{ color: "var(--text-secondary)", fontWeight: "500" }}>In-details / Description</span>
+                <p style={{ background: "#f8fafc", padding: "12px", borderRadius: "8px", border: "1px solid #e2e8f0", color: "#475569", fontSize: "13px", margin: 0, minHeight: "60px" }}>
+                  {selectedAssignment.description || "No description provided."}
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "8px" }}>
+              <button 
+                onClick={() => setSelectedAssignment(null)}
+                className="btn btn-primary" 
+                style={{ width: "120px", padding: "10px" }}
               >
                 Close
               </button>

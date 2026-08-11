@@ -145,6 +145,8 @@ export interface AssignmentResponseDto {
   maximumMarks: number;
   status: AssignmentStatus;
   subjectName: string;
+  className?: string;
+  teacherName?: string;
   teacherId: number;
   createdAt: string; // ISO date-time string
 }

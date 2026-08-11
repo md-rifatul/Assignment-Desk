@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Domain.Entities;
 using AutoMapper;
 using System;
@@ -17,7 +17,9 @@ namespace AssignmentDesk.Application.Mapping
 
             CreateMap<UpdateAssignmentDto, Assignment>();
 
-            CreateMap<Assignment, AssignmentResponseDto>();
+            CreateMap<Assignment, AssignmentResponseDto>()
+                .ForMember(d => d.ClassName, o => o.MapFrom(s => s.Class.Name))
+                .ForMember(d => d.TeacherName, o => o.MapFrom(s => s.Teacher.FullName));
         }
     }
 }

@@ -47,7 +47,9 @@ namespace AssignmentDesk.Application.Services
         public async Task<AdminDashboardDto> GetAdminDashboard()
         {
             var assignments = await _assignmentRepository.GetAllAsync(
-                include: q => q.Include(a => a.Subject).Include(a => a.Class)
+                include: q => q.Include(a => a.Subject)
+                               .Include(a => a.Class)
+                               .Include(a => a.Teacher)
             );
 
             var submissions = await _submissionRepository.GetAllAsync(
