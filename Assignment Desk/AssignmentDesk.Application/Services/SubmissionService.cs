@@ -1,9 +1,10 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Application.Interfaces.IUnitOfWork;
 using AssignmentDesk.Domain.Entities;
 using AssignmentDesk.Domain.Enums;
+using AssignmentDesk.Domain.Exceptions;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -51,30 +52,30 @@ namespace AssignmentDesk.Application.Services
             var submission = await _submissionRepository.GetByStudentAndAssignmentAsync(studentId,assignmentId);
 
             if (submission == null)
-                throw new Exception("Submission not found.");
+                throw new NotFoundException("Submission not found.");
 
             // নিজের Submission কিনা
             if (submission.StudentId != studentId)
-                throw new Exception("You are not authorized.");
+                throw new ForbiddenException("You are not authorized.");
 
             // Assignment বের করো
             var assignment = await _assignmentRepository.GetByIdAsync(submission.AssignmentId);
 
             if (assignment == null)
-                throw new Exception("Assignment not found.");
+                throw new NotFoundException("Assignment not found.");
 
             if (assignment.Status != AssignmentStatus.Publish)
-                throw new Exception("Assignment is not published.");
+                throw new BadRequestException("Assignment is not published.");
 
             if (assignment.Deadline < DateTime.UtcNow)
-                throw new Exception("Submission deadline is over.");
+                throw new BadRequestException("Submission deadline is over.");
 
             // PDF Validation
             if (dto.PdfFile == null || dto.PdfFile.Length == 0)
-                throw new Exception("Please upload a PDF.");
+                throw new BadRequestException("Please upload a PDF.");
 
             if (Path.GetExtension(dto.PdfFile.FileName).ToLower() != ".pdf")
-                throw new Exception("Only PDF file is allowed.");
+                throw new BadRequestException("Only PDF file is allowed.");
 
             // Folder
             var folder = Path.Combine(
@@ -123,13 +124,13 @@ namespace AssignmentDesk.Application.Services
         {
             var submission = await _submissionRepository.GetSubmissionWithAssignmentAsyncBySubmissionId(submissionId);
             if (submission == null)
-                throw new Exception("Submission not found.");
+                throw new NotFoundException("Submission not found.");
             if (submission.Assignment.TeacherId != teacherId)
-                throw new Exception("Your are not allowed for review");
+                throw new ForbiddenException("Your are not allowed for review");
             if (dto.Marks > submission.Assignment.MaximumMarks)
-                throw new Exception("Marks exceed maximum marks.");
+                throw new BadRequestException("Marks exceed maximum marks.");
             if (dto.Marks < 0)
-                throw new Exception("Invalid Marks");
+                throw new BadRequestException("Invalid Marks");
 
             submission.Marks = dto.Marks;
             submission.Feedback = dto.Feedback;
@@ -143,17 +144,17 @@ namespace AssignmentDesk.Application.Services
             var assignment = await _assignmentRepository.GetByIdAsync(dto.AssignmentId);
 
             if (assignment == null)
-                throw new Exception("Assignment not found");
+                throw new NotFoundException("Assignment not found");
             if (assignment.Status != AssignmentStatus.Publish)
-                throw new Exception("Assignment is not publish");
+                throw new BadRequestException("Assignment is not publish");
             if (assignment.Deadline < DateTime.UtcNow)
-                throw new Exception("Submission Dadeline is over");
+                throw new BadRequestException("Submission Dadeline is over");
 
 
             var existingSubmission = await _submissionRepository.GetByStudentAndAssignmentAsync(studentId, dto.AssignmentId);
 
             if (existingSubmission != null)
-                throw new Exception("You have already submitted this assignment.");
+                throw new BadRequestException("You have already submitted this assignment.");
 
             var folder = Path.Combine(
                 Directory.GetCurrentDirectory(),

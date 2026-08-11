@@ -1,9 +1,10 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Application.Interfaces.IUnitOfWork;
 using AssignmentDesk.Domain.Entities;
 using AssignmentDesk.Domain.Enums;
+using AssignmentDesk.Domain.Exceptions;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -38,17 +39,17 @@ namespace AssignmentDesk.Application.Services
             var subject = await _subjectRepository.GetByIdAsync(dto.SubjectId);
 
             if (subject == null)
-                throw new Exception("Subject not found.");
+                throw new NotFoundException("Subject not found.");
 
             // Class আছে কিনা
             var classEntity = await _classRepository.GetByIdAsync(dto.ClassId);
 
             if (classEntity == null)
-                throw new Exception("Class not found.");
+                throw new NotFoundException("Class not found.");
 
             // Subject ওই Class-এর কিনা
             if (subject.ClassId != dto.ClassId)
-                throw new Exception("Selected subject does not belong to the selected class.");
+                throw new BadRequestException("Selected subject does not belong to the selected class.");
 
             // Assignment Create
             var assignment = _mapper.Map<Assignment>(dto);
@@ -85,7 +86,7 @@ namespace AssignmentDesk.Application.Services
             var studentClass = await _studentClassRepository.GetByStudentIdAsync(studentId);
 
             if (studentClass == null)
-                throw new Exception("Student is not assigned to any class.");
+                throw new NotFoundException("Student is not assigned to any class.");
 
             var assignments = await _assignmentRepository
                 .GetAllAssignmentsByClassIdAsync(studentClass.ClassId);

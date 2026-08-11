@@ -10,6 +10,7 @@ using AssignmentDesk.Infrastructure.Repositories;
 using AssignmentDesk.Infrastructure.Repositories.Auth;
 using AssignmentDesk.Infrastructure.Repositories.Common;
 using AssignmentDesk.Infrastructure.Services;
+using Assignment_Desk.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design.Internal;
@@ -18,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 
 builder.Services.AddControllers();
@@ -134,6 +136,7 @@ using (var scope = app.Services.CreateScope())
     await DbSeeder.SeedAdminAsync(context);
 }
 
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,9 +1,10 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IAuth;
 using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Application.Interfaces.IUnitOfWork;
 using AssignmentDesk.Domain.Entities;
+using AssignmentDesk.Domain.Exceptions;
 using AutoMapper;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +40,7 @@ namespace AssignmentDesk.Application.Services
                 await _userRepository.GetByEmailAsync(dto.Email);
 
             if (existingUser != null)
-                throw new Exception("Email already exists.");
+                throw new BadRequestException("Email already exists.");
 
             var user = _mapper.Map<User>(dto);
 

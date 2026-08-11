@@ -1,7 +1,8 @@
-﻿using AssignmentDesk.Application.Auth.DTOs;
+using AssignmentDesk.Application.Auth.DTOs;
 using AssignmentDesk.Application.Interfaces.IAuth;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Application.Interfaces.IUnitOfWork;
+using AssignmentDesk.Domain.Exceptions;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -30,13 +31,13 @@ namespace AssignmentDesk.Application.Services
         public async Task ActivateAccount(ActivateAccountDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Token))
-                throw new Exception("Activation token is required.");
+                throw new BadRequestException("Activation token is required.");
 
             if (string.IsNullOrWhiteSpace(dto.Password))
-                throw new Exception("Password is required.");
+                throw new BadRequestException("Password is required.");
 
             if (dto.Password != dto.ConfirmPassword)
-                throw new Exception("Passwords do not match.");
+                throw new BadRequestException("Passwords do not match.");
 
             var tokenHash = Convert.ToBase64String(
                 SHA256.HashData(
@@ -48,12 +49,12 @@ namespace AssignmentDesk.Application.Services
                 .GetUserByActivationTokenHashAsync(tokenHash);
 
             if (user == null)
-                throw new Exception("Invalid activation token.");
+                throw new BadRequestException("Invalid activation token.");
 
             if (user.ActivationTokenExpiry == null ||
                 user.ActivationTokenExpiry < DateTime.UtcNow)
             {
-                throw new Exception("Activation token has expired.");
+                throw new BadRequestException("Activation token has expired.");
             }
 
             user.PasswordHash =
@@ -105,12 +106,12 @@ namespace AssignmentDesk.Application.Services
         public async Task ResetPassword(ResetPasswordDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Token))
-                throw new Exception("Reset token is required.");
+                throw new BadRequestException("Reset token is required.");
 
             if (string.IsNullOrWhiteSpace(dto.NewPassword))
-                throw new Exception("New password is required.");
+                throw new BadRequestException("New password is required.");
             if (dto.NewPassword != dto.ConfirmPassword)
-                throw new Exception("New password and comfirm password don't match");
+                throw new BadRequestException("New password and comfirm password don't match");
 
             var tokenHash = Convert.ToBase64String(
                 SHA256.HashData(
@@ -122,12 +123,12 @@ namespace AssignmentDesk.Application.Services
                 .GetUserByResetTokenHashAsync(tokenHash);
 
             if (user == null)
-                throw new Exception("Invalid reset token.");
+                throw new BadRequestException("Invalid reset token.");
 
             if (user.PasswordResetTokenExpiry == null ||
                 user.PasswordResetTokenExpiry < DateTime.UtcNow)
             {
-                throw new Exception("Reset token has expired.");
+                throw new BadRequestException("Reset token has expired.");
             }
 
             user.PasswordHash =

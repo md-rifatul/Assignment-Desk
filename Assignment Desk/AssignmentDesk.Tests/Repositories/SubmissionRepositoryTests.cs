@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Domain.Entities;
+using AssignmentDesk.Domain.Entities;
 using AssignmentDesk.Domain.Enums;
 using AssignmentDesk.Infrastructure.Data;
 using AssignmentDesk.Infrastructure.Repositories;
@@ -48,6 +48,13 @@ namespace AssignmentDesk.Tests.Repositories
             {
                 await _context.Subjects.AddAsync(
                     new Subject { Id = 1, Name = "Subject 1" }
+                );
+            }
+
+            if (!await _context.Classes.AnyAsync())
+            {
+                await _context.Classes.AddAsync(
+                    new Class { Id = 1, Name = "Class 1" }
                 );
             }
 

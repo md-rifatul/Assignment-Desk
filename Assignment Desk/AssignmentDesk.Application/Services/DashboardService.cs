@@ -3,6 +3,7 @@ using AssignmentDesk.Application.Interfaces.IAuth;
 using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Application.Interfaces.IServices;
 using AssignmentDesk.Domain.Enums;
+using AssignmentDesk.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using System;
@@ -81,7 +82,7 @@ namespace AssignmentDesk.Application.Services
             var studentClass = await _studentClassRepository.GetByStudentIdAsync(studentId);
 
             if (studentClass == null)
-                throw new Exception("Student is not assigned to any class.");
+                throw new NotFoundException("Student is not assigned to any class.");
 
             var classId = studentClass.ClassId;
 
