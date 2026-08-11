@@ -120,8 +120,51 @@ export default function TeacherDashboardPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "32px", width: "100%" }}>
+      {/* Dynamic Scoped CSS overrides for responsive layouts */}
+      <style>{`
+        @media (max-width: 1024px) {
+          .teacher-dashboard-mid-row {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .teacher-dashboard-header-row {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 20px;
+          }
+          .teacher-dashboard-header-date {
+            width: 100%;
+            justify-content: flex-start;
+          }
+          .teacher-dashboard-overview-container {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 28px !important;
+          }
+          .teacher-dashboard-card-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+          }
+          .teacher-dashboard-card-grid .auth-card {
+            padding: 12px !important;
+            gap: 10px !important;
+          }
+          .teacher-dashboard-card-grid .auth-card svg {
+            width: 20px !important;
+            height: 20px !important;
+          }
+          .teacher-dashboard-card-grid .auth-card p {
+            font-size: 20px !important;
+          }
+          .teacher-dashboard-card-grid .auth-card:last-child {
+            grid-column: span 2 !important;
+          }
+        }
+      `}</style>
+
       {/* Header Greeting Row */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
+      <div className="teacher-dashboard-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
         <div>
           <h1 style={{ fontSize: "28px", fontWeight: "700", color: "#0f172a", marginBottom: "6px" }}>
             Welcome back, {user?.fullName || "Teacher"}!
@@ -130,7 +173,7 @@ export default function TeacherDashboardPage() {
         </div>
         
         {/* Date Card Widget */}
-        <div style={{ background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", padding: "12px 20px", display: "flex", alignItems: "center", gap: "14px", boxShadow: "0 2px 4px rgba(0,0,0,0.01)" }}>
+        <div className="teacher-dashboard-header-date" style={{ background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", padding: "12px 20px", display: "flex", alignItems: "center", gap: "14px", boxShadow: "0 2px 4px rgba(0,0,0,0.01)" }}>
           <div style={{ background: "rgba(79, 70, 229, 0.08)", color: "var(--primary)", padding: "8px", borderRadius: "10px", display: "flex" }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -147,7 +190,7 @@ export default function TeacherDashboardPage() {
       </div>
 
       {/* Stats Cards Row */}
-      <div className="grid grid-3">
+      <div className="grid grid-3 teacher-dashboard-card-grid">
         {/* Subjects Card */}
         <div className="auth-card" style={{ maxWidth: "none", padding: "24px", background: "#ffffff", border: "1px solid var(--border-color)", boxShadow: "none", display: "flex", gap: "20px", alignItems: "center" }}>
           <div style={{ background: "rgba(79, 70, 229, 0.08)", color: "var(--primary)", padding: "16px", borderRadius: "var(--radius-md)", display: "flex" }}>
@@ -197,7 +240,7 @@ export default function TeacherDashboardPage() {
       </div>
 
       {/* Mid row layout: Recent Assignments & Overview Chart */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "24px", flexWrap: "wrap" }}>
+      <div className="teacher-dashboard-mid-row" style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "24px" }}>
         
         {/* Recent Assignments widget */}
         <div className="auth-card" style={{ maxWidth: "none", padding: "24px", background: "#ffffff", border: "1px solid var(--border-color)", boxShadow: "none", display: "flex", flexDirection: "column", justifySelf: "stretch" }}>
@@ -250,7 +293,7 @@ export default function TeacherDashboardPage() {
             </select>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "20px", marginTop: "10px" }}>
+          <div className="teacher-dashboard-overview-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "20px", marginTop: "10px" }}>
             {/* SVG Donut Chart */}
             <div style={{ position: "relative", width: "120px", height: "120px", display: "flex", justifyContent: "center", alignItems: "center" }}>
               <svg width="120" height="120" viewBox="0 0 36 36">

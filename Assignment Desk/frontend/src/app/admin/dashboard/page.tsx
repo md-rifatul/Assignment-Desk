@@ -108,8 +108,57 @@ export default function AdminDashboardPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "32px", width: "100%" }}>
+      
+      {/* Dynamic Scoped CSS overrides for responsive layouts */}
+      <style>{`
+        @media (max-width: 1024px) {
+          .admin-dashboard-mid-row {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .admin-dashboard-header-row {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 20px;
+          }
+          .admin-dashboard-header-date {
+            width: 100%;
+            justify-content: flex-start;
+          }
+          .admin-dashboard-overview-container {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 28px !important;
+          }
+          .admin-dashboard-card-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+          }
+          .admin-dashboard-card-grid .auth-card {
+            padding: 12px !important;
+            gap: 10px !important;
+          }
+          .admin-dashboard-card-grid .auth-card svg {
+            width: 20px !important;
+            height: 20px !important;
+          }
+          .admin-dashboard-card-grid .auth-card p {
+            font-size: 20px !important;
+          }
+          .admin-dashboard-card-grid .auth-card:last-child {
+            grid-column: span 2 !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .admin-dashboard-modal-inner {
+            padding: 16px !important;
+          }
+        }
+      `}</style>
+
       {/* Header Greeting Row */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
+      <div className="admin-dashboard-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
         <div>
           <h1 style={{ fontSize: "28px", fontWeight: "700", color: "#0f172a", marginBottom: "6px" }}>
             Welcome back, System Admin! 👋
@@ -118,7 +167,7 @@ export default function AdminDashboardPage() {
         </div>
         
         {/* Date Card Widget */}
-        <div style={{ background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", padding: "12px 20px", display: "flex", alignItems: "center", gap: "14px", boxShadow: "0 2px 4px rgba(0,0,0,0.01)" }}>
+        <div className="admin-dashboard-header-date" style={{ background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", padding: "12px 20px", display: "flex", alignItems: "center", gap: "14px", boxShadow: "0 2px 4px rgba(0,0,0,0.01)" }}>
           <div style={{ background: "rgba(79, 70, 229, 0.08)", color: "var(--primary)", padding: "8px", borderRadius: "10px", display: "flex" }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -135,7 +184,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* 5 Stats Cards Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: "20px" }}>
+      <div className="admin-dashboard-card-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: "20px" }}>
         {/* Teachers Card */}
         <div className="auth-card" style={{ maxWidth: "none", padding: "20px", background: "#ffffff", border: "1px solid var(--border-color)", boxShadow: "none", display: "flex", gap: "16px", alignItems: "center" }}>
           <div style={{ background: "rgba(79, 70, 229, 0.08)", color: "var(--primary)", padding: "12px", borderRadius: "var(--radius-md)", display: "flex" }}>
@@ -149,7 +198,7 @@ export default function AdminDashboardPage() {
           <div>
             <span style={{ fontSize: "12px", fontWeight: "500", color: "var(--text-secondary)" }}>Total Teachers</span>
             <p style={{ fontSize: "24px", fontWeight: "700", color: "#0f172a", margin: "2px 0" }}>{stats?.totalTeachers ?? 0}</p>
-            <Link href="/admin/users" style={{ fontSize: "10px", color: "var(--primary)", textDecoration: "none", fontWeight: "600" }}>View all teachers &rarr;</Link>
+            <Link href="/admin/users?role=Teacher" style={{ fontSize: "10px", color: "var(--primary)", textDecoration: "none", fontWeight: "600" }}>View all teachers &rarr;</Link>
           </div>
         </div>
 
@@ -164,7 +213,7 @@ export default function AdminDashboardPage() {
           <div>
             <span style={{ fontSize: "12px", fontWeight: "500", color: "var(--text-secondary)" }}>Total Students</span>
             <p style={{ fontSize: "24px", fontWeight: "700", color: "#0f172a", margin: "2px 0" }}>{stats?.totalStudents ?? 0}</p>
-            <Link href="/admin/users" style={{ fontSize: "10px", color: "var(--success)", textDecoration: "none", fontWeight: "600" }}>View all students &rarr;</Link>
+            <Link href="/admin/users?role=Student" style={{ fontSize: "10px", color: "var(--success)", textDecoration: "none", fontWeight: "600" }}>View all students &rarr;</Link>
           </div>
         </div>
 
@@ -223,7 +272,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Mid row layout: Recent Assignments & Overview Chart */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "24px", flexWrap: "wrap" }}>
+      <div className="admin-dashboard-mid-row" style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "24px" }}>
         
         {/* Recent Assignments widget */}
         <div className="auth-card" style={{ maxWidth: "none", padding: "24px", background: "#ffffff", border: "1px solid var(--border-color)", boxShadow: "none", display: "flex", flexDirection: "column", justifySelf: "stretch" }}>
@@ -281,9 +330,9 @@ export default function AdminDashboardPage() {
             </select>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "20px", marginTop: "10px" }}>
+          <div className="admin-dashboard-overview-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "20px", marginTop: "10px" }}>
             {/* SVG Donut Chart */}
-            <div style={{ position: "relative", width: "120px", height: "120px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div style={{ position: "relative", width: "120px", height: "120px", display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
               <svg width="120" height="120" viewBox="0 0 36 36">
                 <circle cx="18" cy="18" r="15.915" fill="none" stroke="#f1f5f9" strokeWidth="3.5" />
                 {totalSubmissions > 0 && (
@@ -320,7 +369,7 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Horizontal Stats List */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px", flex: 1 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", flex: 1, width: "100%" }}>
               {/* Reviewed */}
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px", fontSize: "12px" }}>
@@ -380,8 +429,8 @@ export default function AdminDashboardPage() {
           </button>
         </div>
 
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
+        <div style={{ overflowX: "auto", width: "100%" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px", minWidth: "800px" }}>
             <thead>
               <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
                 <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Student</th>
@@ -498,13 +547,13 @@ export default function AdminDashboardPage() {
       {/* All Assignments Modal */}
       {isAssignmentsModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 9999, padding: "20px" }}>
-          <div style={{ maxWidth: "950px", width: "100%", padding: "24px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", maxHeight: "80vh", display: "flex", flexDirection: "column", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}>
+          <div className="admin-dashboard-modal-inner" style={{ maxWidth: "950px", width: "100%", padding: "24px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", maxHeight: "80vh", display: "flex", flexDirection: "column", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#0f172a", margin: 0 }}>All Assignments</h3>
               <button onClick={() => setIsAssignmentsModalOpen(false)} style={{ background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "24px", fontWeight: "300" }}>&times;</button>
             </div>
-            <div style={{ overflowY: "auto", flex: 1, paddingRight: "4px" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
+            <div style={{ overflowX: "auto", flex: 1, width: "100%" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px", minWidth: "750px" }}>
                 <thead>
                   <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
                     <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600" }}>Title</th>
@@ -567,13 +616,13 @@ export default function AdminDashboardPage() {
       {/* All Submissions Modal */}
       {isSubmissionsModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 9999, padding: "20px" }}>
-          <div style={{ maxWidth: "900px", width: "100%", padding: "24px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", maxHeight: "80vh", display: "flex", flexDirection: "column", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}>
+          <div className="admin-dashboard-modal-inner" style={{ maxWidth: "900px", width: "100%", padding: "24px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", maxHeight: "80vh", display: "flex", flexDirection: "column", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#0f172a", margin: 0 }}>All Submissions</h3>
               <button onClick={() => setIsSubmissionsModalOpen(false)} style={{ background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "24px", fontWeight: "300" }}>&times;</button>
             </div>
-            <div style={{ overflowY: "auto", flex: 1, paddingRight: "4px" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
+            <div style={{ overflowX: "auto", flex: 1, width: "100%" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px", minWidth: "800px" }}>
                 <thead>
                   <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
                     <th style={{ padding: "12px 16px", color: "var(--text-secondary)", fontWeight: "600" }}>Student</th>
@@ -663,7 +712,7 @@ export default function AdminDashboardPage() {
       {/* Submission Info Modal */}
       {selectedSubmission && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 10000, padding: "20px" }}>
-          <div style={{ maxWidth: "550px", width: "100%", padding: "28px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", display: "flex", flexDirection: "column", gap: "20px" }}>
+          <div style={{ maxWidth: "550px", width: "100%", padding: "28px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "90vh", overflowY: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#0f172a", margin: 0 }}>Submission Info</h3>
               <button onClick={() => setSelectedSubmission(null)} style={{ background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "24px", fontWeight: "300" }}>&times;</button>
@@ -734,7 +783,7 @@ export default function AdminDashboardPage() {
       {/* Assignment Info Modal */}
       {selectedAssignment && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 10000, padding: "20px" }}>
-          <div style={{ maxWidth: "550px", width: "100%", padding: "28px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", display: "flex", flexDirection: "column", gap: "20px" }}>
+          <div style={{ maxWidth: "550px", width: "100%", padding: "28px", background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "90vh", overflowY: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#0f172a", margin: 0 }}>Assignment Info</h3>
               <button onClick={() => setSelectedAssignment(null)} style={{ background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "24px", fontWeight: "300" }}>&times;</button>

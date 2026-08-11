@@ -1,14 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import { UserResponseDto, RegisterDto, UserRoleEnum } from "@/types";
 
-export default function AdminUsersPage() {
+function UsersContent() {
   const [users, setUsers] = useState<UserResponseDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Filter state based on query param / pills
+  const searchParams = useSearchParams();
+  const roleParam = searchParams.get("role"); // e.g. "Teacher" or "Student"
+  const [selectedFilterRole, setSelectedFilterRole] = useState<string | null>(null);
 
   // Modals state
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -24,13 +30,24 @@ export default function AdminUsersPage() {
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
+  // Synchronize URL role query parameter to internal state filter
+  useEffect(() => {
+    if (roleParam === "Teacher" || roleParam === "Student" || roleParam === "Admin") {
+      setSelectedFilterRole(roleParam);
+    } else {
+      setSelectedFilterRole(null);
+    }
+  }, [roleParam]);
+
   // Fetch all users
   const fetchUsers = async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await apiFetch<UserResponseDto[]>("/api/user/all");
-      setUsers(data || []);
+      // Filter out Admin users so they are never displayed in the panel
+      const nonAdminUsers = (data || []).filter((u) => u.role !== "Admin");
+      setUsers(nonAdminUsers);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to load users.";
       setError(msg);
@@ -137,9 +154,14 @@ export default function AdminUsersPage() {
     }
   };
 
+  // Filter list by selected role filter pill
+  const filteredUsers = selectedFilterRole
+    ? users.filter((u) => u.role === selectedFilterRole)
+    : users;
+
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", flexWrap: "wrap", gap: "16px" }}>
         <div>
           <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", color: "#0f172a" }}>
             Manage Users
@@ -171,6 +193,36 @@ export default function AdminUsersPage() {
         </div>
       )}
 
+      {/* Role Filter Pills / Tabs */}
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
+        {[
+          { label: "All Users", value: null },
+          { label: "Teachers", value: "Teacher" },
+          { label: "Students", value: "Student" },
+        ].map((tab) => {
+          const isSelected = selectedFilterRole === tab.value;
+          return (
+            <button
+              key={tab.label}
+              onClick={() => setSelectedFilterRole(tab.value)}
+              style={{
+                padding: "8px 16px",
+                borderRadius: "20px",
+                border: isSelected ? "1px solid var(--primary)" : "1px solid var(--border-color)",
+                background: isSelected ? "var(--primary)" : "#ffffff",
+                color: isSelected ? "#ffffff" : "var(--text-secondary)",
+                fontSize: "13px",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: "80px 0" }}>
           <div className="btn-spinner" style={{ width: "48px", height: "48px", borderTopColor: "var(--primary)" }}></div>
@@ -178,9 +230,9 @@ export default function AdminUsersPage() {
       ) : (
         <div className="auth-card" style={{ maxWidth: "none", padding: "0", overflow: "hidden", border: "1px solid var(--border-color)" }}>
           <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px", minWidth: "750px" }}>
               <thead>
-                <tr style={{ background: "rgba(15, 23, 42, 0.4)", borderBottom: "1px solid var(--border-color)" }}>
+                <tr style={{ background: "rgba(15, 23, 42, 0.02)", borderBottom: "1px solid var(--border-color)" }}>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Full Name</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Email</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Role</th>
@@ -189,14 +241,14 @@ export default function AdminUsersPage() {
                 </tr>
               </thead>
               <tbody>
-                {users.length === 0 ? (
+                {filteredUsers.length === 0 ? (
                   <tr>
                     <td colSpan={5} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)" }}>
-                      No users registered yet.
+                      No {selectedFilterRole ? `${selectedFilterRole}s` : "users"} registered yet.
                     </td>
                   </tr>
                 ) : (
-                  users.map((user) => (
+                  filteredUsers.map((user) => (
                     <tr key={user.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
                       <td style={{ padding: "16px 24px", fontWeight: "500" }}>{user.fullName}</td>
                       <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>{user.email}</td>
@@ -361,7 +413,6 @@ export default function AdminUsersPage() {
                 >
                   <option value={UserRoleEnum.Student}>Student</option>
                   <option value={UserRoleEnum.Teacher}>Teacher</option>
-                  <option value={UserRoleEnum.Admin}>Admin</option>
                 </select>
               </div>
 
@@ -379,5 +430,17 @@ export default function AdminUsersPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminUsersPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ display: "flex", justifyContent: "center", padding: "80px 0" }}>
+        <div className="btn-spinner" style={{ width: "48px", height: "48px", borderTopColor: "var(--primary)" }}></div>
+      </div>
+    }>
+      <UsersContent />
+    </Suspense>
   );
 }
