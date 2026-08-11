@@ -25,6 +25,7 @@ export default function AdminTeacherSubjectsPage() {
 
   // Form state
   const [selectedTeacherId, setSelectedTeacherId] = useState<number>(0);
+  const [selectedClassId, setSelectedClassId] = useState<number>(0);
   const [selectedSubjectId, setSelectedSubjectId] = useState<number>(0);
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -99,6 +100,10 @@ export default function AdminTeacherSubjectsPage() {
       setFormError("Please select a teacher.");
       return;
     }
+    if (!selectedClassId) {
+      setFormError("Please select a class.");
+      return;
+    }
     if (!selectedSubjectId) {
       setFormError("Please select a subject.");
       return;
@@ -131,6 +136,7 @@ export default function AdminTeacherSubjectsPage() {
       
       // Reset form selection
       setSelectedTeacherId(0);
+      setSelectedClassId(0);
       setSelectedSubjectId(0);
       
       // Refresh assignments
@@ -215,6 +221,8 @@ export default function AdminTeacherSubjectsPage() {
                 value={selectedTeacherId}
                 onChange={(e) => {
                   setSelectedTeacherId(parseInt(e.target.value));
+                  setSelectedClassId(0);
+                  setSelectedSubjectId(0);
                   setFormError(null);
                 }}
                 disabled={formLoading || loading}
@@ -232,6 +240,32 @@ export default function AdminTeacherSubjectsPage() {
             </div>
 
             <div className="form-group" style={{ marginTop: "20px" }}>
+              <label className="form-label" htmlFor="classSelect">Select Class</label>
+              <select
+                id="classSelect"
+                className="form-control"
+                style={{ background: "rgba(15, 23, 42, 0.95)" }}
+                value={selectedClassId}
+                onChange={(e) => {
+                  setSelectedClassId(parseInt(e.target.value));
+                  setSelectedSubjectId(0);
+                  setFormError(null);
+                }}
+                disabled={formLoading || loading || !selectedTeacherId}
+              >
+                <option value={0}>-- Select a Class --</option>
+                {classes.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+              {classes.length === 0 && !loading && (
+                <span className="error-message">No classes found in database. Create them in Manage Classes.</span>
+              )}
+            </div>
+
+            <div className="form-group" style={{ marginTop: "20px" }}>
               <label className="form-label" htmlFor="subjectSelect">Select Subject</label>
               <select
                 id="subjectSelect"
@@ -242,24 +276,23 @@ export default function AdminTeacherSubjectsPage() {
                   setSelectedSubjectId(parseInt(e.target.value));
                   setFormError(null);
                 }}
-                disabled={formLoading || loading}
+                disabled={formLoading || loading || !selectedClassId}
               >
                 <option value={0}>-- Select a Subject --</option>
-                {subjects.map((s) => {
-                  const matchingClass = classes.find((c) => c.id === s.classId);
-                  return (
+                {subjects
+                  .filter((s) => s.classId === selectedClassId)
+                  .map((s) => (
                     <option key={s.id} value={s.id}>
-                      {s.name} {matchingClass ? `(${matchingClass.name})` : ""}
+                      {s.name}
                     </option>
-                  );
-                })}
+                  ))}
               </select>
-              {subjects.length === 0 && !loading && (
-                <span className="error-message">No subjects found in database. Create them in Manage Subjects.</span>
+              {selectedClassId !== 0 && subjects.filter((s) => s.classId === selectedClassId).length === 0 && (
+                <span className="error-message">No subjects found for this class. Create them in Manage Subjects.</span>
               )}
             </div>
 
-            <button type="submit" className="btn btn-primary" style={{ marginTop: "28px" }} disabled={formLoading || loading || teachers.length === 0 || subjects.length === 0}>
+            <button type="submit" className="btn btn-primary" style={{ marginTop: "28px" }} disabled={formLoading || loading || !selectedTeacherId || !selectedClassId || !selectedSubjectId}>
               {formLoading ? (
                 <>
                   <span className="btn-spinner"></span>
