@@ -17,8 +17,8 @@ export default function TeacherSubmissionsPage() {
   const [selectedSubmission, setSelectedSubmission] = useState<SubmissionResponseDto | null>(null);
 
   // Review Form state
-  const [formData, setFormData] = useState<ReviewSubmissionDto>({
-    marks: 0,
+  const [formData, setFormData] = useState<{ marks: number | ""; feedback: string }>({
+    marks: "",
     feedback: "",
   });
 
@@ -52,7 +52,7 @@ export default function TeacherSubmissionsPage() {
   const handleOpenReview = (submission: SubmissionResponseDto) => {
     setSelectedSubmission(submission);
     setFormData({
-      marks: submission.marks || 0,
+      marks: (submission.status === SubmissionStatus.Reviewed && typeof submission.marks === "number") ? submission.marks : "",
       feedback: submission.feedback || "",
     });
     setFormErrors({});
@@ -71,11 +71,11 @@ export default function TeacherSubmissionsPage() {
     const matchedAssignment = getMatchedAssignment(selectedSubmission.assignmentId);
     const maxMarks = matchedAssignment ? matchedAssignment.maximumMarks : 100;
 
-    if (formData.marks === undefined || formData.marks === null || isNaN(formData.marks)) {
+    if (formData.marks === "" || formData.marks === undefined || formData.marks === null || isNaN(Number(formData.marks))) {
       errors.marks = "Marks are required.";
-    } else if (formData.marks < 0) {
+    } else if (Number(formData.marks) < 0) {
       errors.marks = "Marks cannot be negative.";
-    } else if (formData.marks > maxMarks) {
+    } else if (Number(formData.marks) > maxMarks) {
       errors.marks = `Marks cannot exceed the maximum marks of ${maxMarks}.`;
     }
 
@@ -269,7 +269,8 @@ export default function TeacherSubmissionsPage() {
                   placeholder="Enter score"
                   value={formData.marks}
                   onChange={(e) => {
-                    setFormData(prev => ({ ...prev, marks: Number(e.target.value) }));
+                    const val = e.target.value;
+                    setFormData(prev => ({ ...prev, marks: val === "" ? "" : Number(val) }));
                     if (formErrors.marks) setFormErrors(prev => ({ ...prev, marks: undefined }));
                   }}
                   disabled={formLoading}
