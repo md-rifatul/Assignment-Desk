@@ -298,8 +298,8 @@ html, body {
   .grid-4 { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* Teacher & Admin Desk Premium Light Theme Override */
-.teacher-theme, .admin-theme {
+/* Teacher, Admin & Student Desk Premium Light Theme Override */
+.teacher-theme, .admin-theme, .student-theme {
   --bg-app: #f8fafc;
   --bg-card: #ffffff;
   --bg-card-hover: #f8fafc;
@@ -318,44 +318,44 @@ html, body {
   color: var(--text-primary) !important;
 }
 
-.teacher-theme aside, .admin-theme aside {
+.teacher-theme aside, .admin-theme aside, .student-theme aside {
   background-color: #ffffff !important;
   border-right: 1px solid #e2e8f0 !important;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.01);
 }
 
-.teacher-theme aside a, .admin-theme aside a {
+.teacher-theme aside a, .admin-theme aside a, .student-theme aside a {
   color: #475569 !important;
   transition: all 0.2s ease;
 }
 
-.teacher-theme aside a.active-link, .admin-theme aside a.active-link {
+.teacher-theme aside a.active-link, .admin-theme aside a.active-link, .student-theme aside a.active-link {
   background-color: #f1f5f9 !important;
   color: #4f46e5 !important;
   font-weight: 600 !important;
 }
 
-.teacher-theme aside a:hover:not(.active-link), .admin-theme aside a:hover:not(.active-link) {
+.teacher-theme aside a:hover:not(.active-link), .admin-theme aside a:hover:not(.active-link), .student-theme aside a:hover:not(.active-link) {
   background-color: #f8fafc !important;
   color: #0f172a !important;
 }
 
-.teacher-theme table th, .admin-theme table th {
+.teacher-theme table th, .admin-theme table th, .student-theme table th {
   background-color: #f8fafc !important;
   color: #475569 !important;
   font-weight: 600 !important;
   border-bottom: 1px solid #e2e8f0 !important;
 }
 
-.teacher-theme table tr, .admin-theme table tr {
+.teacher-theme table tr, .admin-theme table tr, .student-theme table tr {
   background-color: #ffffff !important;
 }
 
-.teacher-theme table tr:hover, .admin-theme table tr:hover {
+.teacher-theme table tr:hover, .admin-theme table tr:hover, .student-theme table tr:hover {
   background-color: #f8fafc !important;
 }
 
-.teacher-theme table td, .admin-theme table td {
+.teacher-theme table td, .admin-theme table td, .student-theme table td {
   border-bottom: 1px solid #f1f5f9 !important;
   color: #475569;
 }
@@ -365,7 +365,10 @@ html, body {
 .teacher-theme select,
 .admin-theme input,
 .admin-theme textarea,
-.admin-theme select {
+.admin-theme select,
+.student-theme input,
+.student-theme textarea,
+.student-theme select {
   background-color: #ffffff !important;
   color: #0f172a !important;
   border: 1px solid #d1d5db !important;
@@ -376,7 +379,10 @@ html, body {
 .teacher-theme select:focus,
 .admin-theme input:focus,
 .admin-theme textarea:focus,
-.admin-theme select:focus {
+.admin-theme select:focus,
+.student-theme input:focus,
+.student-theme textarea:focus,
+.student-theme select:focus {
   border-color: #4f46e5 !important;
   outline: none;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15) !important;

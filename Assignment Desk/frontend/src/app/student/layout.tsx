@@ -1,19 +1,28 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Sidebar toggle state for mobile view
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && (!user || user.role !== "Student")) {
       router.push("/login");
     }
   }, [user, loading, router]);
+
+  // Close sidebar on pathname change
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
 
   if (loading || !user || user.role !== "Student") {
     return (
@@ -23,28 +32,175 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     );
   }
 
+  const isActive = (path: string) => pathname === path || pathname?.startsWith(path + "/");
+
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-layout student-theme" style={{ display: "flex", height: "100vh", overflow: "hidden", position: "relative" }}>
+      
+      {/* Scoped CSS styling for slide drawer sidebar */}
+      <style>{`
+        @media (max-width: 768px) {
+          .student-sidebar {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 99999 !important;
+            transform: translateX(${isSidebarOpen ? "0%" : "-100%"});
+            transition: transform 0.3s ease !important;
+            box-shadow: ${isSidebarOpen ? "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)" : "none"} !important;
+          }
+          .student-hamburger-header {
+            display: flex !important;
+          }
+          .student-main-content {
+            padding: 24px 16px !important;
+          }
+        }
+      `}</style>
+
+      {/* Backdrop overlay for mobile drawer */}
+      {isSidebarOpen && (
+        <div 
+          onClick={() => setIsSidebarOpen(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(15,23,42,0.15)",
+            backdropFilter: "blur(2px)",
+            zIndex: 99998,
+            display: "block"
+          }}
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside style={{ width: "260px", background: "rgba(15, 23, 42, 0.95)", borderRight: "1px solid var(--border-color)", padding: "24px", display: "flex", flexDirection: "column" }}>
-        <div style={{ marginBottom: "32px" }}>
-          <h2 style={{ fontSize: "20px", fontWeight: "700" }}>Student Desk</h2>
-          <p style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Logged as {user.fullName}</p>
+      <aside 
+        className="student-sidebar"
+        style={{ 
+          width: "260px", 
+          background: "#ffffff", 
+          borderRight: "1px solid var(--border-color)", 
+          padding: "24px", 
+          display: "flex", 
+          flexDirection: "column",
+          flexShrink: 0
+        }}
+      >
+        {/* Brand Logo header */}
+        <div style={{ marginBottom: "32px", display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ background: "rgba(79, 70, 229, 0.1)", color: "var(--primary)", padding: "8px", borderRadius: "10px", display: "flex" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+              <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+            </svg>
+          </div>
+          <div>
+            <h2 style={{ fontSize: "16px", fontWeight: "700", color: "#0f172a", margin: 0 }}>Student Desk</h2>
+            <p style={{ fontSize: "11px", color: "var(--text-secondary)", margin: 0 }}>Logged in as student</p>
+          </div>
         </div>
+        
+        {/* Real Active Links Navigation */}
         <nav style={{ display: "flex", flexDirection: "column", gap: "8px", flex: 1 }}>
-          <Link href="/student/dashboard" style={{ padding: "12px", borderRadius: "var(--radius-sm)", color: "var(--text-primary)", fontWeight: "500" }}>Dashboard</Link>
-          <Link href="/student/assignments" style={{ padding: "12px", borderRadius: "var(--radius-sm)", color: "var(--text-secondary)" }}>Class Assignments</Link>
-          <Link href="/student/submissions" style={{ padding: "12px", borderRadius: "var(--radius-sm)", color: "var(--text-secondary)" }}>My Submissions</Link>
+          <Link 
+            href="/student/dashboard" 
+            className={isActive("/student/dashboard") && pathname === "/student/dashboard" ? "active-link" : ""}
+            onClick={() => setIsSidebarOpen(false)}
+            style={{ padding: "12px 16px", borderRadius: "var(--radius-md)", textDecoration: "none", fontSize: "14px", display: "flex", alignItems: "center", gap: "10px" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            Dashboard
+          </Link>
+          <Link 
+            href="/student/assignments" 
+            className={isActive("/student/assignments") ? "active-link" : ""}
+            onClick={() => setIsSidebarOpen(false)}
+            style={{ padding: "12px 16px", borderRadius: "var(--radius-md)", textDecoration: "none", fontSize: "14px", display: "flex", alignItems: "center", gap: "10px" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
+            Class Assignments
+          </Link>
+          <Link 
+            href="/student/submissions" 
+            className={isActive("/student/submissions") ? "active-link" : ""}
+            onClick={() => setIsSidebarOpen(false)}
+            style={{ padding: "12px 16px", borderRadius: "var(--radius-md)", textDecoration: "none", fontSize: "14px", display: "flex", alignItems: "center", gap: "10px" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+            </svg>
+            My Submissions
+          </Link>
         </nav>
-        <button className="btn" style={{ background: "var(--danger-bg)", color: "var(--danger)" }} onClick={logout}>
+        
+        {/* Log Out button */}
+        <button 
+          className="btn" 
+          style={{ background: "rgba(239,68,68,0.05)", color: "var(--danger)", padding: "12px", border: "1px solid rgba(239,68,68,0.1)", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", borderRadius: "var(--radius-md)" }} 
+          onClick={logout}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
           Log Out
         </button>
       </aside>
       
-      {/* Main Content */}
-      <main style={{ flex: 1, padding: "40px", overflowY: "auto" }}>
-        {children}
-      </main>
+      {/* Main Content Area */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
+        
+        {/* Mobile Hamburger Header Menu Bar */}
+        <header className="student-hamburger-header" style={{
+          display: "none",
+          alignItems: "center",
+          padding: "16px",
+          background: "#ffffff",
+          borderBottom: "1px solid var(--border-color)",
+          gap: "12px",
+          width: "100%",
+          boxSizing: "border-box"
+        }}>
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              color: "#0f172a",
+              display: "flex",
+              alignItems: "center",
+              padding: "6px"
+            }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <span style={{ fontSize: "16px", fontWeight: "700", color: "#0f172a" }}>Student Desk</span>
+        </header>
+
+        {/* Content Box */}
+        <main className="student-main-content" style={{ flex: 1, padding: "40px", overflowY: "auto", display: "flex", flexDirection: "column" }}>
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

@@ -55,7 +55,7 @@ export default function StudentSubmissionsPage() {
   return (
     <div>
       <div style={{ marginBottom: "32px" }}>
-        <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", background: "linear-gradient(to right, #ffffff, #94a3b8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+        <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", color: "#0f172a" }}>
           My Submissions
         </h1>
         <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>History of your uploaded solution files, grading status, and feedback</p>

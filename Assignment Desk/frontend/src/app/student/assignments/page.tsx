@@ -1,14 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { apiFetch } from "@/lib/api";
 import { AssignmentResponseDto, AssignmentStatus, SubmissionResponseDto, SubmissionStatus } from "@/types";
+import { useSearchParams } from "next/navigation";
 
-export default function StudentAssignmentsPage() {
+function StudentAssignmentsContent() {
+  const searchParams = useSearchParams();
+  const statusParam = searchParams.get("status");
   const [assignments, setAssignments] = useState<AssignmentResponseDto[]>([]);
   const [submissionsList, setSubmissionsList] = useState<SubmissionResponseDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"pending" | "submitted" | "not-submitted" | "all">("all");
+
+  useEffect(() => {
+    if (statusParam === "pending") {
+      setActiveTab("pending");
+    } else if (statusParam === "submitted") {
+      setActiveTab("submitted");
+    } else if (statusParam === "not-submitted") {
+      setActiveTab("not-submitted");
+    } else {
+      setActiveTab("all");
+    }
+  }, [statusParam]);
 
   // Modal / Detail panel states
   const [selectedAssignment, setSelectedAssignment] = useState<AssignmentResponseDto | null>(null);
@@ -197,10 +213,41 @@ export default function StudentAssignmentsPage() {
   return (
     <div>
       <div style={{ marginBottom: "32px" }}>
-        <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", background: "linear-gradient(to right, #ffffff, #94a3b8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+        <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", color: "#0f172a" }}>
           Class Assignments
         </h1>
         <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>Active assignments published for your course</p>
+      </div>
+
+      {/* Filter Tabs */}
+      <div style={{ display: "flex", gap: "8px", borderBottom: "1px solid var(--border-color)", paddingBottom: "16px", marginBottom: "32px", overflowX: "auto" }}>
+        {[
+          { id: "all", label: "All Assignments" },
+          { id: "pending", label: "Pending" },
+          { id: "submitted", label: "Submitted" },
+          { id: "not-submitted", label: "Not Submitted" }
+        ].map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as "pending" | "submitted" | "not-submitted" | "all")}
+              style={{
+                padding: "8px 16px",
+                borderRadius: "var(--radius-md)",
+                border: "none",
+                background: isActive ? "var(--primary)" : "transparent",
+                color: isActive ? "#ffffff" : "var(--text-secondary)",
+                fontWeight: "600",
+                fontSize: "14px",
+                cursor: "pointer",
+                transition: "all 0.2s ease"
+              }}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
       {error && (
@@ -220,12 +267,33 @@ export default function StudentAssignmentsPage() {
         </div>
       ) : (
         <div className="grid grid-3" style={{ gap: "24px" }}>
-          {assignments.length === 0 ? (
-            <div className="auth-card" style={{ gridColumn: "1 / -1", maxWidth: "none", padding: "48px", textAlign: "center", color: "var(--text-secondary)" }}>
-              No assignments available at this moment.
-            </div>
-          ) : (
-            assignments.map((assignment) => {
+          {(() => {
+            const displayedAssignments = assignments.filter((assignment) => {
+              const hasSubmitted = submissionsList.some(s => s.assignmentId === assignment.id);
+              const deadline = new Date(assignment.deadline).getTime();
+              const isPastDeadline = deadline < Date.now();
+
+              if (activeTab === "pending") {
+                return !hasSubmitted && !isPastDeadline;
+              }
+              if (activeTab === "submitted") {
+                return hasSubmitted;
+              }
+              if (activeTab === "not-submitted") {
+                return !hasSubmitted && isPastDeadline;
+              }
+              return true;
+            });
+
+            if (displayedAssignments.length === 0) {
+              return (
+                <div className="auth-card" style={{ gridColumn: "1 / -1", maxWidth: "none", padding: "48px", textAlign: "center", color: "var(--text-secondary)" }}>
+                  No assignments available at this moment.
+                </div>
+              );
+            }
+
+            return displayedAssignments.map((assignment) => {
               const deadline = formatDeadline(assignment.deadline);
               const hasSubmitted = submissionsList.some(s => s.assignmentId === assignment.id);
 
@@ -301,8 +369,8 @@ export default function StudentAssignmentsPage() {
                   </div>
                 </div>
               );
-            })
-          )}
+            });
+          })()}
         </div>
       )}
 
@@ -566,5 +634,17 @@ export default function StudentAssignmentsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function StudentAssignmentsPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ display: "flex", justifyContent: "center", padding: "80px 0" }}>
+        <div className="btn-spinner" style={{ width: "48px", height: "48px", borderTopColor: "var(--primary)" }}></div>
+      </div>
+    }>
+      <StudentAssignmentsContent />
+    </Suspense>
   );
 }
