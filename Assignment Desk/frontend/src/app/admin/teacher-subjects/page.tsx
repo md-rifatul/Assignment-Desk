@@ -321,6 +321,7 @@ export default function AdminTeacherSubjectsPage() {
                 <thead>
                   <tr style={{ background: "rgba(15, 23, 42, 0.2)", borderBottom: "1px solid var(--border-color)" }}>
                     <th style={{ padding: "12px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Teacher</th>
+                    <th style={{ padding: "12px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Class</th>
                     <th style={{ padding: "12px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Subject</th>
                     <th style={{ padding: "12px 24px", color: "var(--text-secondary)", fontWeight: "600", textAlign: "right" }}>Actions</th>
                   </tr>
@@ -328,7 +329,7 @@ export default function AdminTeacherSubjectsPage() {
                 <tbody>
                   {assignments.length === 0 ? (
                     <tr>
-                      <td colSpan={3} style={{ padding: "32px 24px", textAlign: "center", color: "var(--text-muted)", fontStyle: "italic" }}>
+                      <td colSpan={4} style={{ padding: "32px 24px", textAlign: "center", color: "var(--text-muted)", fontStyle: "italic" }}>
                         No teacher-subject allocations recorded yet.
                       </td>
                     </tr>
@@ -337,7 +338,10 @@ export default function AdminTeacherSubjectsPage() {
                       <tr key={item.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
                         <td style={{ padding: "12px 24px", fontWeight: "500" }}>{item.teacherName}</td>
                         <td style={{ padding: "12px 24px", color: "var(--text-secondary)" }}>
-                          {item.subjectName} {item.className ? `(${item.className})` : ""}
+                          {item.className || "N/A"}
+                        </td>
+                        <td style={{ padding: "12px 24px", color: "var(--text-secondary)" }}>
+                          {item.subjectName}
                         </td>
                         <td style={{ padding: "12px 24px", textAlign: "right" }}>
                           <button className="btn" style={{ width: "auto", padding: "4px 8px", fontSize: "12px", background: "rgba(239, 68, 68, 0.1)", color: "var(--danger)" }} onClick={() => handleUnassign(item.id, item.teacherName, item.subjectName)}>

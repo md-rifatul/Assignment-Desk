@@ -199,9 +199,6 @@ export default function StudentDashboardPage() {
           .student-dashboard-card-grid .auth-card p {
             font-size: 20px !important;
           }
-          .student-dashboard-card-grid .auth-card:last-child {
-            grid-column: span 2 !important;
-          }
         }
       `}</style>
 
@@ -231,24 +228,9 @@ export default function StudentDashboardPage() {
         </div>
       </div>
 
-      {/* 5 Stats Cards Grid */}
+      {/* 4 Stats Cards Grid */}
       <div className="student-dashboard-card-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: "20px" }}>
         
-        {/* My Classes Card */}
-        <div className="auth-card" style={{ maxWidth: "none", padding: "20px", background: "#ffffff", border: "1px solid var(--border-color)", boxShadow: "none", display: "flex", gap: "16px", alignItems: "center" }}>
-          <div style={{ background: "rgba(99, 102, 241, 0.08)", color: "var(--primary)", padding: "12px", borderRadius: "var(--radius-md)", display: "flex" }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-            </svg>
-          </div>
-          <div>
-            <span style={{ fontSize: "12px", fontWeight: "500", color: "var(--text-secondary)" }}>My Classes</span>
-            <p style={{ fontSize: "24px", fontWeight: "700", color: "#0f172a", margin: "2px 0" }}>{myClassesCount}</p>
-            <Link href="/student/assignments" style={{ fontSize: "10px", color: "var(--primary)", textDecoration: "none", fontWeight: "600" }}>View all classes &rarr;</Link>
-          </div>
-        </div>
-
         {/* Assignments Card */}
         <div className="auth-card" style={{ maxWidth: "none", padding: "20px", background: "#ffffff", border: "1px solid var(--border-color)", boxShadow: "none", display: "flex", gap: "16px", alignItems: "center" }}>
           <div style={{ background: "rgba(16, 185, 129, 0.08)", color: "var(--success)", padding: "12px", borderRadius: "var(--radius-md)", display: "flex" }}>

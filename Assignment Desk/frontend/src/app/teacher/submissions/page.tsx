@@ -2,15 +2,21 @@
 
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api";
-import { SubmissionResponseDto, AssignmentResponseDto, ReviewSubmissionDto, SubmissionStatus } from "@/types";
+import { SubmissionResponseDto, AssignmentResponseDto, ReviewSubmissionDto, SubmissionStatus, ClassResponseDto, SubjectResponseDto } from "@/types";
 
 export default function TeacherSubmissionsPage() {
   const [submissions, setSubmissions] = useState<SubmissionResponseDto[]>([]);
   const [assignments, setAssignments] = useState<AssignmentResponseDto[]>([]);
+  const [classes, setClasses] = useState<ClassResponseDto[]>([]);
+  const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Filter state
+  const [selectedFilterClassId, setSelectedFilterClassId] = useState<number>(0);
+  const [selectedFilterSubjectName, setSelectedFilterSubjectName] = useState<string>("");
 
   // Review Modal controls
   const [isReviewOpen, setIsReviewOpen] = useState(false);
@@ -30,13 +36,17 @@ export default function TeacherSubmissionsPage() {
     setLoading(true);
     setError(null);
     try {
-      const [allSubmissions, allAssignments] = await Promise.all([
+      const [allSubmissions, allAssignments, allClasses, allSubjects] = await Promise.all([
         apiFetch<SubmissionResponseDto[]>("/api/submission/teacher/submissions"),
         apiFetch<AssignmentResponseDto[]>("/api/assignment/all"),
+        apiFetch<ClassResponseDto[]>("/api/class/all"),
+        apiFetch<SubjectResponseDto[]>("/api/subject/all"),
       ]);
 
       setSubmissions(allSubmissions || []);
       setAssignments(allAssignments || []);
+      setClasses(allClasses || []);
+      setSubjects(allSubjects || []);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to load submissions data.";
       setError(msg);
@@ -113,6 +123,35 @@ export default function TeacherSubmissionsPage() {
     }
   };
 
+  // Filter submissions based on class and subject filters
+  const filteredSubmissions = submissions.filter((sub) => {
+    // 1. Class filter
+    if (selectedFilterClassId !== 0) {
+      const filterClass = classes.find((c) => c.id === selectedFilterClassId);
+      if (!filterClass) return false;
+
+      const matchedAssignment = getMatchedAssignment(sub.assignmentId);
+      const isClassMatch = sub.className === filterClass.name || 
+                           (matchedAssignment && matchedAssignment.className === filterClass.name);
+      if (!isClassMatch) return false;
+    }
+
+    // 2. Subject filter
+    if (selectedFilterSubjectName !== "") {
+      if (sub.subjectName !== selectedFilterSubjectName) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  // Filter dropdown subjects to only show subjects for the selected class (if class filter is selected)
+  // Only keep the first occurrence of each unique subject name
+  const filterDropdownSubjects = subjects
+    .filter((s) => selectedFilterClassId === 0 || s.classId === selectedFilterClassId)
+    .filter((s, idx, self) => self.findIndex((x) => x.name === s.name) === idx);
+
   return (
     <div>
       <div style={{ marginBottom: "32px" }}>
@@ -142,6 +181,78 @@ export default function TeacherSubmissionsPage() {
         </div>
       )}
 
+      {/* Filters Section */}
+      <div style={{ 
+        display: "flex", 
+        justifyContent: "flex-start", 
+        alignItems: "center", 
+        flexWrap: "wrap",
+        gap: "24px", 
+        marginBottom: "24px",
+        background: "rgba(15, 23, 42, 0.4)",
+        padding: "12px 24px",
+        borderRadius: "var(--radius-md)",
+        border: "1px solid var(--border-color)",
+        width: "fit-content"
+      }}>
+        {/* Class Filter */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <label htmlFor="filterClassSelect" style={{ fontSize: "14px", fontWeight: "600", color: "var(--text-secondary)" }}>
+            Filter by Class:
+          </label>
+          <select
+            id="filterClassSelect"
+            className="form-control"
+            style={{ 
+              width: "180px", 
+              background: "rgba(15, 23, 42, 0.95)", 
+              padding: "8px 12px",
+              fontSize: "14px",
+              margin: 0
+            }}
+            value={selectedFilterClassId}
+            onChange={(e) => {
+              setSelectedFilterClassId(parseInt(e.target.value));
+              setSelectedFilterSubjectName("");
+            }}
+          >
+            <option value={0}>All Classes</option>
+            {classes.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Subject Filter */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <label htmlFor="filterSubjectSelect" style={{ fontSize: "14px", fontWeight: "600", color: "var(--text-secondary)" }}>
+            Filter by Subject:
+          </label>
+          <select
+            id="filterSubjectSelect"
+            className="form-control"
+            style={{ 
+              width: "180px", 
+              background: "rgba(15, 23, 42, 0.95)", 
+              padding: "8px 12px",
+              fontSize: "14px",
+              margin: 0
+            }}
+            value={selectedFilterSubjectName}
+            onChange={(e) => setSelectedFilterSubjectName(e.target.value)}
+          >
+            <option value="">All Subjects</option>
+            {filterDropdownSubjects.map((s) => (
+              <option key={s.id} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: "80px 0" }}>
           <div className="btn-spinner" style={{ width: "48px", height: "48px", borderTopColor: "var(--primary)" }}></div>
@@ -153,6 +264,7 @@ export default function TeacherSubmissionsPage() {
               <thead>
                 <tr style={{ background: "rgba(15, 23, 42, 0.4)", borderBottom: "1px solid var(--border-color)" }}>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Student</th>
+                  <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Class</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Assignment</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Subject</th>
                   <th style={{ padding: "16px 24px", color: "var(--text-secondary)", fontWeight: "600" }}>Submitted Date</th>
@@ -162,20 +274,22 @@ export default function TeacherSubmissionsPage() {
                 </tr>
               </thead>
               <tbody>
-                {submissions.length === 0 ? (
+                {filteredSubmissions.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)", fontStyle: "italic" }}>
-                      No student submissions received yet.
+                    <td colSpan={8} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)", fontStyle: "italic" }}>
+                      No student submissions found.
                     </td>
                   </tr>
                 ) : (
-                  submissions.map((submission) => {
+                  filteredSubmissions.map((submission) => {
                     const matchedAssignment = getMatchedAssignment(submission.assignmentId);
                     const maxMarks = matchedAssignment ? matchedAssignment.maximumMarks : "N/A";
+                    const className = submission.className || (matchedAssignment ? matchedAssignment.className : "") || "N/A";
 
                     return (
                       <tr key={submission.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
                         <td style={{ padding: "16px 24px", fontWeight: "500" }}>{submission.studentName}</td>
+                        <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>{className}</td>
                         <td style={{ padding: "16px 24px" }}>{submission.assignmentTitle}</td>
                         <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>{submission.subjectName}</td>
                         <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>
@@ -222,6 +336,32 @@ export default function TeacherSubmissionsPage() {
             <p style={{ color: "var(--text-secondary)", fontSize: "14px", marginBottom: "20px" }}>
               Student: <strong style={{ color: "var(--text-primary)" }}>{selectedSubmission.studentName}</strong> | Assignment: <strong style={{ color: "var(--text-primary)" }}>{selectedSubmission.assignmentTitle}</strong>
             </p>
+
+            {/* Assignment Details Box */}
+            {(() => {
+              const matchedAssignment = getMatchedAssignment(selectedSubmission.assignmentId);
+              return matchedAssignment ? (
+                <div style={{ 
+                  background: "rgba(255, 255, 255, 0.03)", 
+                  border: "1px solid var(--border-color)", 
+                  borderRadius: "var(--radius-md)", 
+                  padding: "16px", 
+                  marginBottom: "20px" 
+                }}>
+                  <h4 style={{ fontSize: "14px", fontWeight: "600", color: "var(--text-primary)", marginBottom: "8px" }}>
+                    Question / Assignment Details
+                  </h4>
+                  <div style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                    <p style={{ margin: "0 0 6px 0" }}>
+                      <strong>Title:</strong> {matchedAssignment.title}
+                    </p>
+                    <p style={{ margin: 0 }}>
+                      <strong>Description:</strong> {matchedAssignment.description}
+                    </p>
+                  </div>
+                </div>
+              ) : null;
+            })()}
 
             {formError && (
               <div className="alert alert-danger" style={{ marginBottom: "20px" }}>

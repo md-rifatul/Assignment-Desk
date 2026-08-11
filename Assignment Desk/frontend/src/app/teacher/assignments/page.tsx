@@ -21,6 +21,10 @@ export default function TeacherAssignmentsPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // Filter state
+  const [selectedFilterClassId, setSelectedFilterClassId] = useState<number>(0);
+  const [selectedFilterSubjectName, setSelectedFilterSubjectName] = useState<string>("");
+
   // Modal controls
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -243,6 +247,30 @@ export default function TeacherAssignmentsPage() {
     alloc.classId === formData.classId
   );
 
+  // Filter assignments based on class and subject filters
+  const filteredAssignments = assignments.filter((assignment) => {
+    // 1. Class filter
+    if (selectedFilterClassId !== 0) {
+      const matchedSubject = subjects.find(s => s.name === assignment.subjectName);
+      const isClassMatch = (matchedSubject && matchedSubject.classId === selectedFilterClassId) || 
+                           (assignment.className === classes.find(c => c.id === selectedFilterClassId)?.name);
+      if (!isClassMatch) return false;
+    }
+    
+    // 2. Subject filter
+    if (selectedFilterSubjectName !== "") {
+      if (assignment.subjectName !== selectedFilterSubjectName) return false;
+    }
+    
+    return true;
+  });
+
+  // Filter dropdown subjects to only show subjects for the selected class (if class filter is selected)
+  // Only keep the first occurrence of each unique subject name
+  const filterDropdownSubjects = subjects
+    .filter((s) => selectedFilterClassId === 0 || s.classId === selectedFilterClassId)
+    .filter((s, idx, self) => self.findIndex((x) => x.name === s.name) === idx);
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
@@ -277,6 +305,78 @@ export default function TeacherAssignmentsPage() {
         </div>
       )}
 
+      {/* Filters Section */}
+      <div style={{ 
+        display: "flex", 
+        justifyContent: "flex-start", 
+        alignItems: "center", 
+        flexWrap: "wrap",
+        gap: "24px", 
+        marginBottom: "24px",
+        background: "rgba(15, 23, 42, 0.4)",
+        padding: "12px 24px",
+        borderRadius: "var(--radius-md)",
+        border: "1px solid var(--border-color)",
+        width: "fit-content"
+      }}>
+        {/* Class Filter */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <label htmlFor="filterClassSelect" style={{ fontSize: "14px", fontWeight: "600", color: "var(--text-secondary)" }}>
+            Filter by Class:
+          </label>
+          <select
+            id="filterClassSelect"
+            className="form-control"
+            style={{ 
+              width: "180px", 
+              background: "rgba(15, 23, 42, 0.95)", 
+              padding: "8px 12px",
+              fontSize: "14px",
+              margin: 0
+            }}
+            value={selectedFilterClassId}
+            onChange={(e) => {
+              setSelectedFilterClassId(parseInt(e.target.value));
+              setSelectedFilterSubjectName("");
+            }}
+          >
+            <option value={0}>All Classes</option>
+            {classes.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Subject Filter */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <label htmlFor="filterSubjectSelect" style={{ fontSize: "14px", fontWeight: "600", color: "var(--text-secondary)" }}>
+            Filter by Subject:
+          </label>
+          <select
+            id="filterSubjectSelect"
+            className="form-control"
+            style={{ 
+              width: "180px", 
+              background: "rgba(15, 23, 42, 0.95)", 
+              padding: "8px 12px",
+              fontSize: "14px",
+              margin: 0
+            }}
+            value={selectedFilterSubjectName}
+            onChange={(e) => setSelectedFilterSubjectName(e.target.value)}
+          >
+            <option value="">All Subjects</option>
+            {filterDropdownSubjects.map((s) => (
+              <option key={s.id} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: "80px 0" }}>
           <div className="btn-spinner" style={{ width: "48px", height: "48px", borderTopColor: "var(--primary)" }}></div>
@@ -297,14 +397,14 @@ export default function TeacherAssignmentsPage() {
                 </tr>
               </thead>
               <tbody>
-                {assignments.length === 0 ? (
+                {filteredAssignments.length === 0 ? (
                   <tr>
                     <td colSpan={7} style={{ padding: "40px 24px", textAlign: "center", color: "var(--text-muted)" }}>
-                      No assignments created yet.
+                      No assignments found.
                     </td>
                   </tr>
                 ) : (
-                  assignments.map((assignment) => {
+                  filteredAssignments.map((assignment) => {
                     const matchedSubject = subjects.find(s => s.name === assignment.subjectName);
                     const matchedClass = matchedSubject ? classes.find(c => c.id === matchedSubject.classId) : null;
 
