@@ -493,7 +493,7 @@ function StudentAssignmentsContent() {
                   {/* Actions right at the top */}
                   <div style={{ display: "grid", gridTemplateColumns: !formatDeadline(selectedAssignment.deadline).isPast && submission.status !== SubmissionStatus.Reviewed ? "1fr 1fr" : "1fr", gap: "12px", marginTop: "4px" }}>
                     <a
-                      href={`http://localhost:5145${submission.fileUrl}`}
+                      href={submission.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn"

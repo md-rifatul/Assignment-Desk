@@ -1,14 +1,20 @@
+if (process.env.NODE_ENV === 'development') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
+
+const backendUrl = process.env.BACKEND_URL || 'http://localhost:5145';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:5145/api/:path*',
+        destination: `${backendUrl}/api/:path*`,
       },
       {
         source: '/uploads/:path*',
-        destination: 'http://localhost:5145/uploads/:path*',
+        destination: `${backendUrl}/uploads/:path*`,
       },
     ];
   },

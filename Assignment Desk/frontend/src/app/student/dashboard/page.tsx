@@ -503,7 +503,7 @@ export default function StudentDashboardPage() {
 
                         {/* Action button to open document */}
                         <a 
-                          href={submission.fileUrl.startsWith("http") ? submission.fileUrl : `http://localhost:5145${submission.fileUrl}`} 
+                          href={submission.fileUrl} 
                           target="_blank" 
                           rel="noreferrer"
                           style={{ display: "flex", color: "#64748b" }}

@@ -380,7 +380,7 @@ export default function TeacherSubmissionsPage() {
                   Uploaded Student Answer PDF
                 </span>
                 <a
-                  href={`http://localhost:5145${selectedSubmission.fileUrl}`}
+                  href={selectedSubmission.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn"

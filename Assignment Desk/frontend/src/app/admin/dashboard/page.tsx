@@ -755,7 +755,7 @@ export default function AdminDashboardPage() {
 
             <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
               <a 
-                href={selectedSubmission.fileUrl.startsWith("http") ? selectedSubmission.fileUrl : `http://localhost:5145${selectedSubmission.fileUrl}`}
+                href={selectedSubmission.fileUrl}
                 target="_blank" 
                 rel="noreferrer"
                 style={{ flex: 1, textDecoration: "none" }}

@@ -221,7 +221,7 @@ export default function StudentSubmissionsPage() {
 
                 <div style={{ borderTop: "1px solid var(--border-color)", paddingTop: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <a
-                    href={`http://localhost:5145${selectedSubmission.fileUrl}`}
+                    href={selectedSubmission.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn"
