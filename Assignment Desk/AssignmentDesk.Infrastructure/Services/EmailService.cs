@@ -24,10 +24,11 @@ namespace AssignmentDesk.Infrastructure.Services
         {
             var message = new MimeMessage();
 
+            var senderEmail = string.IsNullOrEmpty(_settings.SenderEmail) ? _settings.Email : _settings.SenderEmail;
             message.From.Add(
                 new MailboxAddress(
                     "AssignmentDesk",
-                    _settings.Email));
+                    senderEmail));
 
             message.To.Add(
                 MailboxAddress.Parse(email));
@@ -126,10 +127,11 @@ namespace AssignmentDesk.Infrastructure.Services
         {
             var message = new MimeMessage();
 
+            var senderEmail = string.IsNullOrEmpty(_settings.SenderEmail) ? _settings.Email : _settings.SenderEmail;
             message.From.Add(
                 new MailboxAddress(
                     "AssignmentDesk",
-                    _settings.Email));
+                    senderEmail));
 
             message.To.Add(
                 MailboxAddress.Parse(email));

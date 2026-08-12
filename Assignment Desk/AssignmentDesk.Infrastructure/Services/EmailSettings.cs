@@ -13,5 +13,6 @@ namespace AssignmentDesk.Infrastructure.Services
         public string SmtpServer { get; set; } = string.Empty;
         public int Port { get; set; }
         public string ApiKey { get; set; } = string.Empty;
+        public string SenderEmail { get; set; } = string.Empty;
     }
 }
