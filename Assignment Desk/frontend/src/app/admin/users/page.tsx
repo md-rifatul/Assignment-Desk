@@ -311,10 +311,6 @@ function UsersContent() {
             <h2 style={{ fontSize: "20px", fontWeight: "700", marginBottom: "20px" }}>User Details</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "32px" }}>
               <div>
-                <label style={{ fontSize: "12px", color: "var(--text-muted)", textTransform: "uppercase" }}>User ID</label>
-                <p style={{ fontSize: "15px", fontWeight: "500", marginTop: "4px" }}>{selectedUser.id}</p>
-              </div>
-              <div>
                 <label style={{ fontSize: "12px", color: "var(--text-muted)", textTransform: "uppercase" }}>Full Name</label>
                 <p style={{ fontSize: "15px", fontWeight: "500", marginTop: "4px" }}>{selectedUser.fullName}</p>
               </div>
