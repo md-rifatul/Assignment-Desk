@@ -1,0 +1,6 @@
+@Assignment_Desk_HostAddress = http://localhost:5145
+
+GET {{Assignment_Desk_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

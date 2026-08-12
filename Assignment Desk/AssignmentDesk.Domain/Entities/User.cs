@@ -1,0 +1,33 @@
+﻿using AssignmentDesk.Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AssignmentDesk.Domain.Entities
+{
+    public class User
+    {
+        public int Id { get; set; }
+
+        public string FullName { get; set; }
+
+        public string Email { get; set; }
+
+        public string? PasswordHash { get; set; }
+
+        public UserRole Role { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public string? PasswordResetTokenHash { get; set; }
+        public DateTime? PasswordResetTokenExpiry { get; set; }
+
+        public string? ActivationTokenHash { get; set; }
+
+        public DateTime? ActivationTokenExpiry { get; set; }
+    }
+}
