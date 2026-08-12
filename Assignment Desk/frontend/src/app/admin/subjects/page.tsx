@@ -23,15 +23,6 @@ export default function AdminSubjectsPage() {
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Helper dictionary to lookup class name by class ID
-  const classMap = React.useMemo(() => {
-    const map: Record<number, string> = {};
-    classes.forEach((cls) => {
-      map[cls.id] = cls.name;
-    });
-    return map;
-  }, [classes]);
-
   // Group subjects by class name
   const groupedClasses = React.useMemo(() => {
     if (classes.length === 0) return [];

@@ -8,7 +8,6 @@ import Link from "next/link";
 
 export default function StudentDashboardPage() {
   const { user } = useAuth();
-  const [stats, setStats] = useState<StudentDashboardDto | null>(null);
   const [assignments, setAssignments] = useState<AssignmentResponseDto[]>([]);
   const [submissionsList, setSubmissionsList] = useState<SubmissionResponseDto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +22,7 @@ export default function StudentDashboardPage() {
     setLoading(true);
     setError(null);
     try {
-      const [statsData, assignmentsData, subsData] = await Promise.all([
+      const [, assignmentsData, subsData] = await Promise.all([
         apiFetch<StudentDashboardDto>("/api/dashboard/student"),
         apiFetch<AssignmentResponseDto[]>("/api/assignment/student/my-assignments"),
         apiFetch<SubmissionResponseDto[]>("/api/submission/my-submissions").catch((err) => {
@@ -32,7 +31,6 @@ export default function StudentDashboardPage() {
         })
       ]);
 
-      setStats(statsData);
       setAssignments(assignmentsData || []);
       setSubmissionsList(subsData || []);
     } catch (err: unknown) {
@@ -83,7 +81,6 @@ export default function StudentDashboardPage() {
   }
 
   // 1. Dynamic calculation for stats cards
-  const myClassesCount = stats?.mySubjects ?? 0;
   const assignmentsCount = assignments.length;
   const submittedCount = submissionsList.length;
 
