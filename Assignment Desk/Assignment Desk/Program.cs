@@ -166,6 +166,11 @@ using (var scope = app.Services.CreateScope())
     await DbSeeder.SeedAdminAsync(context);
 }
 
+
+//health check
+app.MapGet("/health", () => Results.Ok("OK"));
+
+
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
