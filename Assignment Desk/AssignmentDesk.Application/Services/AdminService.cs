@@ -62,7 +62,7 @@ namespace AssignmentDesk.Application.Services
             user.ActivationTokenHash = tokenHash;
 
             user.ActivationTokenExpiry =
-                DateTime.UtcNow.AddHours(24);
+                DateTime.UtcNow.AddDays(7);
 
             // User cannot login until activation
             user.IsActive = false;
