@@ -100,7 +100,7 @@ export async function apiFetch<T>(
       ...options,
       headers,
     });
-  } catch (error) {
+  } catch {
     throw new ApiError("Failed to connect to the server. Please verify the backend is running.", 0);
   }
 
@@ -130,7 +130,7 @@ export async function apiFetch<T>(
               ...options,
               headers,
             });
-          } catch (retryError) {
+          } catch {
             throw new ApiError("Failed to connect to the server. Please verify the backend is running.", 0);
           }
         } else {
