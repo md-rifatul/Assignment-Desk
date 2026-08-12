@@ -1,4 +1,4 @@
-﻿using AssignmentDesk.Domain.Enums;
+using AssignmentDesk.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +29,9 @@ namespace AssignmentDesk.Domain.Entities
         public string? ActivationTokenHash { get; set; }
 
         public DateTime? ActivationTokenExpiry { get; set; }
+
+        public string? RefreshToken { get; set; }
+
+        public DateTime? RefreshTokenExpiry { get; set; }
     }
 }

@@ -28,6 +28,7 @@ export interface LoginRequestDto {
 
 export interface LoginResponseDto {
   token: string;
+  refreshToken: string;
 }
 
 export interface ForgotPasswordDto {
