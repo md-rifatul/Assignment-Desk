@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +12,6 @@ namespace AssignmentDesk.Infrastructure.Services
         public string Password { get; set; } = string.Empty;
         public string SmtpServer { get; set; } = string.Empty;
         public int Port { get; set; }
+        public string ApiKey { get; set; } = string.Empty;
     }
 }
