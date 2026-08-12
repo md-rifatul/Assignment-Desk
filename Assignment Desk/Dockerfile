@@ -29,4 +29,8 @@ EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
+# Bypass inotify limits on shared hosting (Render)
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+ENV ASPNETCORE_hostBuilder__reloadConfigOnChange=false
+
 ENTRYPOINT ["dotnet", "AssignmentDesk.Api.dll"]
