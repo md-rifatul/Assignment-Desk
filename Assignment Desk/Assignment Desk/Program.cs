@@ -41,7 +41,14 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+        var clientUrl = builder.Configuration["AppSettings:ClientBaseUrl"];
+        var origins = new List<string> { "http://localhost:3000", "https://localhost:3000" };
+        if (!string.IsNullOrEmpty(clientUrl))
+        {
+            origins.Add(clientUrl.TrimEnd('/'));
+        }
+
+        policy.WithOrigins(origins.ToArray())
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
