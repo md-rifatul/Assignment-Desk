@@ -168,7 +168,7 @@ using (var scope = app.Services.CreateScope())
 
 
 //health check
-app.MapGet("/health", () => Results.Content("<h1>API is Live</h1>", "text/html"));
+app.MapMethods("/health", new[] { "GET", "HEAD" }, () => Results.Content("<h1>API is Live</h1>", "text/html"));
 
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
