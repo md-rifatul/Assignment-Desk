@@ -10,7 +10,7 @@ COPY ["AssignmentDesk.Domain/AssignmentDesk.Domain.csproj", "AssignmentDesk.Doma
 COPY ["AssignmentDesk.Infrastructure/AssignmentDesk.Infrastructure.csproj", "AssignmentDesk.Infrastructure/"]
 
 # Restore NuGet packages
-RUN dotnet restore "Assignment Desk.sln"
+RUN dotnet restore "Assignment Desk/AssignmentDesk.Api.csproj"
 
 # Copy the remaining source files
 COPY . .
