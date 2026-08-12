@@ -16,7 +16,7 @@ interface AuthContextType {
   user: AuthUser | null;
   token: string | null;
   loading: boolean;
-  login: (token: string) => void;
+  login: (token: string, refreshToken: string) => void;
   logout: () => void;
 }
 
@@ -49,13 +49,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
   }, []);
 
-  const login = (newToken: string) => {
+  const login = (newToken: string, newRefreshToken: string) => {
     const decoded = decodeJwt(newToken);
     if (!decoded) {
       throw new Error("Invalid token format.");
     }
 
     setCookie("auth_token", newToken, 60); // 60 minutes expiry
+    setCookie("refresh_token", newRefreshToken, 7 * 24 * 60); // 7 days expiry
     setToken(newToken);
     
     const loggedUser: AuthUser = {
@@ -79,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     deleteCookie("auth_token");
+    deleteCookie("refresh_token");
     setToken(null);
     setUser(null);
     router.push("/login");

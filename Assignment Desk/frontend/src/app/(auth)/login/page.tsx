@@ -54,8 +54,8 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      if (response && response.token) {
-        login(response.token);
+      if (response && response.token && response.refreshToken) {
+        login(response.token, response.refreshToken);
       } else {
         setApiError("Authentication succeeded but no token was returned.");
       }

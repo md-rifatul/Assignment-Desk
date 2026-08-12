@@ -94,10 +94,54 @@ export async function apiFetch<T>(
     headers.set("Content-Type", "application/json");
   }
 
-  const response = await fetch(endpoint, {
-    ...options,
-    headers,
-  });
+  let response: Response;
+  try {
+    response = await fetch(endpoint, {
+      ...options,
+      headers,
+    });
+  } catch (error) {
+    throw new ApiError("Failed to connect to the server. Please verify the backend is running.", 0);
+  }
+
+  if (response.status === 401 && !endpoint.includes("/api/auth/refresh") && !endpoint.includes("/api/auth/login")) {
+    const refreshToken = getCookie("refresh_token");
+    if (refreshToken && token) {
+      try {
+        const refreshResponse = await fetch("/api/auth/refresh", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: token,
+            refreshToken: refreshToken
+          })
+        });
+
+        if (refreshResponse.ok) {
+          const data = await refreshResponse.json();
+          setCookie("auth_token", data.token, 60);
+          setCookie("refresh_token", data.refreshToken, 7 * 24 * 60);
+
+          headers.set("Authorization", `Bearer ${data.token}`);
+          try {
+            response = await fetch(endpoint, {
+              ...options,
+              headers,
+            });
+          } catch (retryError) {
+            throw new ApiError("Failed to connect to the server. Please verify the backend is running.", 0);
+          }
+        } else {
+          deleteCookie("auth_token");
+          deleteCookie("refresh_token");
+        }
+      } catch (error) {
+        console.error("Token refresh failed", error);
+      }
+    }
+  }
 
   if (!response.ok) {
     let errorMessage = "An unexpected error occurred.";
@@ -116,7 +160,21 @@ export async function apiFetch<T>(
         }
       } else {
         const text = await response.text();
-        if (text) errorMessage = text;
+        if (text) {
+          if (text.trim().startsWith("<!") || text.includes("<html") || (contentType && contentType.includes("text/html"))) {
+            if (response.status === 502) {
+              errorMessage = "Unable to connect to the backend server (502 Bad Gateway). Please make sure the backend is running.";
+            } else if (response.status === 503) {
+              errorMessage = "Backend service is temporarily unavailable (503 Service Unavailable).";
+            } else if (response.status === 504) {
+              errorMessage = "Backend server took too long to respond (504 Gateway Timeout).";
+            } else {
+              errorMessage = `Server error (${response.status}). Please check if the backend is running.`;
+            }
+          } else {
+            errorMessage = text;
+          }
+        }
       }
     } catch {
       // Fallback to default
