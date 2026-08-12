@@ -66,8 +66,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped(typeof(IReadRepository<>), typeof(Repository<>));
-builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IClassRepository,ClassRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();

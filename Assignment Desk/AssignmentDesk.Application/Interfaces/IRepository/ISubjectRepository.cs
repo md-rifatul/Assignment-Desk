@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Application.Interfaces.IRepository
 {
-    public interface ISubjectRepository : IReadRepository<Subject>, IWriteRepository<Subject>
+    public interface ISubjectRepository : IRepository<Subject>
     {
         Task<IEnumerable<Subject>> SearchAsync(string search);
         Task<int> CountAsync(Expression<Func<Subject, bool>> predicate);

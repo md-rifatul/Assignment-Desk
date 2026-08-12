@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Application.Interfaces.IRepository
 {
-    public interface IStudentClassRepository : IReadRepository<StudentClass>, IWriteRepository<StudentClass>
+    public interface IStudentClassRepository : IRepository<StudentClass>
     {
         Task<bool> ExistsAsync(Expression<Func<StudentClass, bool>> predicate);
         Task<StudentClass?> GetByStudentIdAsync(int studentId);

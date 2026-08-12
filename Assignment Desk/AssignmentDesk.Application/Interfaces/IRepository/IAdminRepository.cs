@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Application.Interfaces.IRepository
 {
-    public interface IAdminRepository : IReadRepository<User>, IWriteRepository<User>
+    public interface IAdminRepository : IRepository<User>
     {
         Task<IEnumerable<User>> SearchAsync(string search);
     }

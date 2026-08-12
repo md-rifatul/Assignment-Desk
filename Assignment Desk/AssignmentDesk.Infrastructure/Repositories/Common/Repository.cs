@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Infrastructure.Repositories.Common
 {
-    public class Repository<T> : BaseRepository<T>, IReadRepository<T>, IWriteRepository<T>
+    public class Repository<T> : BaseRepository<T>, IRepository<T>
            where T : class
     {
         public Repository(ApplicationDbContext context) : base(context) { }

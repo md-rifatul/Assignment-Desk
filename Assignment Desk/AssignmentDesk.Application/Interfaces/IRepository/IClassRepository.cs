@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Application.Interfaces.IRepository
 {
-    public interface IClassRepository : IReadRepository<Class>, IWriteRepository<Class>
+    public interface IClassRepository : IRepository<Class>
     {
         Task<IEnumerable<Class>> SearchAsync(string search);
         Task<int> CountAsync();

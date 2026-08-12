@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace AssignmentDesk.Application.Interfaces.IRepository.Common
 {
-    public interface IReadRepository<T> where T : class
+    public interface IRepository<T> where T : class 
     {
         Task<T?> GetByIdAsync(int id,
-            Func<IQueryable<T>, IQueryable<T>>? include = null);
+    Func<IQueryable<T>, IQueryable<T>>? include = null);
 
         Task<List<T>> GetAllAsync(
             Expression<Func<T, bool>>? filter = null,
@@ -26,5 +26,11 @@ namespace AssignmentDesk.Application.Interfaces.IRepository.Common
             int pageSize,
             Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IQueryable<T>>? include = null);
+
+        Task AddAsync(T entity);
+        Task AddRangeAsync(IEnumerable<T> entities);
+
+        void Update(T entity);
+        void Delete(T entity);
     }
 }
