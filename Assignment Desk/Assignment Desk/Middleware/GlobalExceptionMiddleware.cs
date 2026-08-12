@@ -61,8 +61,16 @@ namespace Assignment_Desk.Middleware
             await context.Response.WriteAsync(json);
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(
+            HttpContext context,
+            Exception exception)
         {
+            _logger.LogError(
+                exception,
+                "Exception occurred while processing request. Method: {Method}, Path: {Path}",
+                context.Request.Method,
+                context.Request.Path);
+
             var statusCode = StatusCodes.Status500InternalServerError;
             var message = "An unexpected error occurred.";
 
@@ -107,11 +115,6 @@ namespace Assignment_Desk.Middleware
                     statusCode = StatusCodes.Status400BadRequest;
                     message = invOpEx.Message;
                     break;
-
-                default:
-                    // Log unexpected exception on server side
-                    _logger.LogError(exception, "An unhandled exception occurred: {Message}", exception.Message);
-                    break;
             }
 
             context.Response.ContentType = "application/json";
@@ -120,11 +123,12 @@ namespace Assignment_Desk.Middleware
             var response = new
             {
                 success = false,
-                message = message,
-                statusCode = statusCode
+                message,
+                statusCode
             };
 
             var json = JsonSerializer.Serialize(response);
+
             await context.Response.WriteAsync(json);
         }
     }

@@ -1,3 +1,4 @@
+using Assignment_Desk.Middleware;
 using AssignmentDesk.Application.Interfaces.IAuth;
 using AssignmentDesk.Application.Interfaces.IRepository;
 using AssignmentDesk.Application.Interfaces.IRepository.Common;
@@ -10,15 +11,27 @@ using AssignmentDesk.Infrastructure.Repositories;
 using AssignmentDesk.Infrastructure.Repositories.Auth;
 using AssignmentDesk.Infrastructure.Repositories.Common;
 using AssignmentDesk.Infrastructure.Services;
-using Assignment_Desk.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+//for logger
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File(
+        "Logs/log-.txt",
+        rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 
 
