@@ -154,9 +154,6 @@ export default function TeacherAssignmentsPage() {
   };
 
   const handleOpenEdit = (assignment: AssignmentResponseDto) => {
-    // Attempt client-side lookup of subjectId and classId based on subject name mapping
-    const matchedSubject = subjects.find(s => s.name === assignment.subjectName);
-    
     setSelectedAssignment(assignment);
     setFormData({
       title: assignment.title,
@@ -164,8 +161,8 @@ export default function TeacherAssignmentsPage() {
       deadline: formatDateTimeLocal(assignment.deadline),
       maximumMarks: Number(assignment.maximumMarks),
       status: assignment.status,
-      classId: matchedSubject ? matchedSubject.classId : 0,
-      subjectId: matchedSubject ? matchedSubject.id : 0,
+      classId: assignment.classId,
+      subjectId: assignment.subjectId,
     });
     setFormErrors({});
     setFormError(null);
@@ -251,10 +248,7 @@ export default function TeacherAssignmentsPage() {
   const filteredAssignments = assignments.filter((assignment) => {
     // 1. Class filter
     if (selectedFilterClassId !== 0) {
-      const matchedSubject = subjects.find(s => s.name === assignment.subjectName);
-      const isClassMatch = (matchedSubject && matchedSubject.classId === selectedFilterClassId) || 
-                           (assignment.className === classes.find(c => c.id === selectedFilterClassId)?.name);
-      if (!isClassMatch) return false;
+      if (assignment.classId !== selectedFilterClassId) return false;
     }
     
     // 2. Subject filter
@@ -405,15 +399,12 @@ export default function TeacherAssignmentsPage() {
                   </tr>
                 ) : (
                   filteredAssignments.map((assignment) => {
-                    const matchedSubject = subjects.find(s => s.name === assignment.subjectName);
-                    const matchedClass = matchedSubject ? classes.find(c => c.id === matchedSubject.classId) : null;
-
                     return (
                       <tr key={assignment.id} style={{ borderBottom: "1px solid var(--border-color)", transition: "background var(--transition-fast)" }} className="table-row-hover">
                         <td style={{ padding: "16px 24px", fontWeight: "500" }}>{assignment.title}</td>
                         <td style={{ padding: "16px 24px" }}>{assignment.subjectName}</td>
                         <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>
-                          {matchedClass ? matchedClass.name : "N/A"}
+                          {assignment.className || "N/A"}
                         </td>
                         <td style={{ padding: "16px 24px", color: "var(--text-secondary)" }}>
                           {new Date(assignment.deadline).toLocaleString()}
