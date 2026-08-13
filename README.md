@@ -176,8 +176,12 @@ Use the following working credentials to log in to the different roles:
 | Role | Email | Password | Details |
 | :--- | :--- | :--- | :--- |
 | **Admin** | `admin@assignmentdesk.com` | `admin@123` | Pre-seeded / Full access to user management, classes, subjects |
-| **Teacher** | `teacher@assignmentdesk.com` | `teacher@123` | Pre-seeded in `backup.sql` / Create assignments & grade submissions |
-| **Student** | `student@assignmentdesk.com` | `student@123` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
+| **Teacher** | `rifatuul@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Create assignments & grade submissions |
+| **Teacher** | `hello.rfatul@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Create assignments & grade submissions |
+| **Student** | `rifatul.exe@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
+| **Student** | `rifatul.exe@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
+| **Student** | `hey.rifatul@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
+| **Student** | `	drubo614@gmail.com@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
 
 > [!NOTE]
 > If you set up the database using Method B (EF Migrations), only the Admin account is seeded. You can log in as Admin and navigate to the User Management dashboard to create and configure Teacher and Student accounts.
