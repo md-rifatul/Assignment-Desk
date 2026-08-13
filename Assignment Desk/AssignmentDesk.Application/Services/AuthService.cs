@@ -93,7 +93,7 @@ namespace AssignmentDesk.Application.Services
             user.PasswordResetTokenExpiry = DateTime.UtcNow.AddMinutes(15);
             await _unitOfWork.CommitAsync();
 
-            var clientBaseUrl = _configuration["AppSettings:ClientBaseUrl"];
+            var clientBaseUrl = _configuration["AppSettings:ClientBaseUrl"]?.TrimEnd('/');
 
             var resetLink = $"{clientBaseUrl}/reset-password?token={Uri.EscapeDataString(token)}";
 

@@ -75,7 +75,7 @@ namespace AssignmentDesk.Application.Services
 
             // Create activation link
             var clientBaseUrl =
-                _configuration["AppSettings:ClientBaseUrl"];
+                _configuration["AppSettings:ClientBaseUrl"]?.TrimEnd('/');
 
             var activationLink =
                 $"{clientBaseUrl}/activate-account?token={token}";
