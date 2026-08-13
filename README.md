@@ -169,6 +169,18 @@ dotnet test
 
 ---
 
+### Database Setup Instructions
+The database script and seed data are included in the `Database/backup.sql` file.
+
+To setup the database locally using PostgreSQL:
+
+1. Create a database named `AssignmentManagementDb`.
+2. Run the SQL script:
+   ```bash
+   psql -U postgres -d AssignmentManagementDb --no-owner -f backup.sql
+
+
+
 ## 🔑 Demo Credentials
 
 Use the following working credentials to log in to the different roles:
