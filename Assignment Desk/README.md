@@ -1,5 +1,8 @@
 # 🎓 Assignment Desk - Assignment Management System
 
+> [!IMPORTANT]
+> 🚀 **Live Demo URL**: [https://assignmentdesk.vercel.app/login](https://assignmentdesk.vercel.app/login)
+
 Assignment Desk is a robust, full-stack enterprise web application designed for educational institutions to manage courses, assignments, and student submissions. The system supports three primary user roles: **Admin**, **Teacher**, and **Student**, each with a dedicated dashboard, custom metrics, and role-specific permissions.
 
 ---
@@ -61,6 +64,10 @@ Assignment-Desk/
 *   **Dashboard**: Overview of active assignments, upcoming deadlines, and graded reviews.
 *   **Assignment Hub**: View list of assigned tasks and deadlines.
 *   **Submission Center**: Upload and submit files (PDF format) for assignments, resubmit before deadlines, and check grading feedback.
+
+### ✉️ Email Integration & Authentication
+*   **New User Password Setup**: When a new user (Teacher or Student) is created by the Admin, the system automatically sends an email containing a secure invitation link, enabling the user to set up their own password.
+*   **Forgot Password Recovery**: Users can request a password reset from the login screen. The system sends a verification link via email, allowing them to securely reset and recover their password.
 
 ---
 
@@ -169,8 +176,13 @@ Use the following working credentials to log in to the different roles:
 | Role | Email | Password | Details |
 | :--- | :--- | :--- | :--- |
 | **Admin** | `admin@assignmentdesk.com` | `admin@123` | Pre-seeded / Full access to user management, classes, subjects |
-| **Teacher** | `teacher@assignmentdesk.com` | `teacher@123` | Pre-seeded in `backup.sql` / Create assignments & grade submissions |
-| **Student** | `student@assignmentdesk.com` | `student@123` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
+| **Teacher** | `rifatuul@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Create assignments & grade submissions |
+| **Teacher** | `hello.rfatul@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Create assignments & grade submissions |
+| **Student** | `rifatul.exe@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
+| **Student** | `rifatul.exe@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
+| **Student** | `hey.rifatul@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
+| **Student** | `	drubo614@gmail.com@gmail.com` | `12345678` | Pre-seeded in `backup.sql` / Submit PDF assignments & view grades |
+
 
 > [!NOTE]
 > If you set up the database using Method B (EF Migrations), only the Admin account is seeded. You can log in as Admin and navigate to the User Management dashboard to create and configure Teacher and Student accounts.

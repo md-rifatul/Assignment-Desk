@@ -1,5 +1,8 @@
 # 🎓 Assignment Desk - Assignment Management System
 
+> [!IMPORTANT]
+> 🚀 **Live Demo URL**: [https://assignmentdesk.vercel.app/login](https://assignmentdesk.vercel.app/login)
+
 Assignment Desk is a robust, full-stack enterprise web application designed for educational institutions to manage courses, assignments, and student submissions. The system supports three primary user roles: **Admin**, **Teacher**, and **Student**, each with a dedicated dashboard, custom metrics, and role-specific permissions.
 
 ---
@@ -61,6 +64,10 @@ Assignment-Desk/
 *   **Dashboard**: Overview of active assignments, upcoming deadlines, and graded reviews.
 *   **Assignment Hub**: View list of assigned tasks and deadlines.
 *   **Submission Center**: Upload and submit files (PDF format) for assignments, resubmit before deadlines, and check grading feedback.
+
+### ✉️ Email Integration & Authentication
+*   **New User Password Setup**: When a new user (Teacher or Student) is created by the Admin, the system automatically sends an email containing a secure invitation link, enabling the user to set up their own password.
+*   **Forgot Password Recovery**: Users can request a password reset from the login screen. The system sends a verification link via email, allowing them to securely reset and recover their password.
 
 ---
 
