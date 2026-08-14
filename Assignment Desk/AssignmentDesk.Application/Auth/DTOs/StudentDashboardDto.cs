@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +13,6 @@ namespace AssignmentDesk.Application.Auth.DTOs
         public int SubmittedAssignments { get; set; }
         public int PendingAssignments { get; set; }
         public int ReviewedAssignments { get; set; }
+        public string? ClassName { get; set; }
     }
 }

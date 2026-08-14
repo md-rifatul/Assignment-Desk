@@ -38,7 +38,11 @@ namespace AssignmentDesk.Infrastructure.Repositories
 
         public async Task<IEnumerable<Assignment>> GetAllAssignmentsByClassIdAsync(int classId)
         {
-            return await _context.Assignments.Include(x=>x.Subject).Where(x=>x.ClassId==classId && x.Status==AssignmentStatus.Publish).ToListAsync();
+            return await _context.Assignments
+                .Include(x => x.Subject)
+                .Include(x => x.Class)
+                .Where(x => x.ClassId == classId && x.Status == AssignmentStatus.Publish)
+                .ToListAsync();
         }
 
         public async Task<int> CountAsync()

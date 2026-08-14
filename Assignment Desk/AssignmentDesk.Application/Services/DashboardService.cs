@@ -85,6 +85,7 @@ namespace AssignmentDesk.Application.Services
                 throw new NotFoundException("Student is not assigned to any class.");
 
             var classId = studentClass.ClassId;
+            var @class = await _classRepository.GetByIdAsync(classId, null);
 
             return new StudentDashboardDto
             {
@@ -92,7 +93,8 @@ namespace AssignmentDesk.Application.Services
                 MyAssignments = await _assignmentRepository.CountAsync(x => x.ClassId == classId),
                 SubmittedAssignments = await _submissionRepository.CountAsync(x=>x.StudentId == studentId),
                 PendingAssignments = await _assignmentRepository.CountPendingAssignmentsAsync(studentId, classId),
-                ReviewedAssignments = await _submissionRepository.CountAsync(x=>x.StudentId==studentId && x.Status==SubmissionStatus.Reviewed)
+                ReviewedAssignments = await _submissionRepository.CountAsync(x=>x.StudentId==studentId && x.Status==SubmissionStatus.Reviewed),
+                ClassName = @class?.Name
             };
         }
 

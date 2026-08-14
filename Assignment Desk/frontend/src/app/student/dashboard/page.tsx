@@ -8,6 +8,7 @@ import Link from "next/link";
 
 export default function StudentDashboardPage() {
   const { user } = useAuth();
+  const [stats, setStats] = useState<StudentDashboardDto | null>(null);
   const [assignments, setAssignments] = useState<AssignmentResponseDto[]>([]);
   const [submissionsList, setSubmissionsList] = useState<SubmissionResponseDto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,7 @@ export default function StudentDashboardPage() {
     setLoading(true);
     setError(null);
     try {
-      const [, assignmentsData, subsData] = await Promise.all([
+      const [statsData, assignmentsData, subsData] = await Promise.all([
         apiFetch<StudentDashboardDto>("/api/dashboard/student"),
         apiFetch<AssignmentResponseDto[]>("/api/assignment/student/my-assignments"),
         apiFetch<SubmissionResponseDto[]>("/api/submission/my-submissions").catch((err) => {
@@ -31,6 +32,7 @@ export default function StudentDashboardPage() {
         })
       ]);
 
+      setStats(statsData || null);
       setAssignments(assignmentsData || []);
       setSubmissionsList(subsData || []);
     } catch (err: unknown) {
@@ -208,19 +210,35 @@ export default function StudentDashboardPage() {
           <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>{"Here's what's happening with your courses today."}</p>
         </div>
         
-        {/* Date Card Widget */}
-        <div className="student-dashboard-header-date" style={{ background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", padding: "12px 20px", display: "flex", alignItems: "center", gap: "14px", boxShadow: "0 2px 4px rgba(0,0,0,0.01)" }}>
-          <div style={{ background: "rgba(99, 102, 241, 0.08)", color: "var(--primary)", padding: "8px", borderRadius: "10px", display: "flex" }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-            </svg>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+          {/* Class Card Widget */}
+          <div className="student-dashboard-header-date" style={{ background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", padding: "12px 20px", display: "flex", alignItems: "center", gap: "14px", boxShadow: "0 2px 4px rgba(0,0,0,0.01)" }}>
+            <div style={{ background: "rgba(16, 185, 129, 0.08)", color: "var(--success)", padding: "8px", borderRadius: "10px", display: "flex" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                <path d="M6 12.5V16a6 6 0 0 0 12 0v-3.5" />
+              </svg>
+            </div>
+            <div>
+              <p style={{ fontSize: "12px", color: "var(--text-secondary)", margin: 0 }}>Class</p>
+              <p style={{ fontSize: "14px", fontWeight: "700", color: "#0f172a", margin: 0 }}>{stats?.className || "Loading..."}</p>
+            </div>
           </div>
-          <div>
-            <p style={{ fontSize: "14px", fontWeight: "600", color: "#0f172a", margin: 0 }}>{currentDateStr}</p>
-            <p style={{ fontSize: "12px", color: "var(--text-secondary)", margin: 0 }}>{currentDayStr}</p>
+
+          {/* Date Card Widget */}
+          <div className="student-dashboard-header-date" style={{ background: "#ffffff", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", padding: "12px 20px", display: "flex", alignItems: "center", gap: "14px", boxShadow: "0 2px 4px rgba(0,0,0,0.01)" }}>
+            <div style={{ background: "rgba(99, 102, 241, 0.08)", color: "var(--primary)", padding: "8px", borderRadius: "10px", display: "flex" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </div>
+            <div>
+              <p style={{ fontSize: "14px", fontWeight: "600", color: "#0f172a", margin: 0 }}>{currentDateStr}</p>
+              <p style={{ fontSize: "12px", color: "var(--text-secondary)", margin: 0 }}>{currentDayStr}</p>
+            </div>
           </div>
         </div>
       </div>

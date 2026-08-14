@@ -32,6 +32,8 @@ namespace AssignmentDesk.Infrastructure.Repositories
                 .Include(x => x.Student)
                 .Include(x => x.Assignment)
                     .ThenInclude(x => x.Subject)
+                .Include(x => x.Assignment)
+                    .ThenInclude(x => x.Class)
                 .Where(x => x.StudentId == studentId).ToListAsync();
         }
 
@@ -41,6 +43,8 @@ namespace AssignmentDesk.Infrastructure.Repositories
                 .Include(x => x.Student)
                 .Include(x => x.Assignment)
                     .ThenInclude(x => x.Subject)
+                .Include(x => x.Assignment)
+                    .ThenInclude(x => x.Class)
                 .FirstOrDefaultAsync(x=>x.StudentId==studentId&&x.AssignmentId==assignmentId);
         }
 

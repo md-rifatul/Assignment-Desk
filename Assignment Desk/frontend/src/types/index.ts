@@ -70,6 +70,7 @@ export interface StudentDashboardDto {
   submittedAssignments: number;
   pendingAssignments: number;
   reviewedAssignments: number;
+  className?: string;
 }
 
 // User response
